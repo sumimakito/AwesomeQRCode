@@ -64,7 +64,7 @@ public class AwesomeQRCode {
      * @param dataDotScale Scale the data blocks and makes them appear smaller.
      * @param colorDark Color of blocks. Will be OVERRIDE by autoColor. (BYTE_DTA, BYTE_POS, BYTE_AGN, BYTE_TMG)
      * @param colorLight Color of empty space. Will be OVERRIDE by autoColor. (BYTE_EPT)
-     * @param backgroundImage The background image to embed in the QR code. If null, no background image will be embeded.
+     * @param backgroundImage The background image to embed in the QR code. If null, no background image will be embedded.
      * @param whiteMargin If true, background image will not be drawn on the margin area.
      * @param autoColor If true, colorDark will be set to the dominant color of backgroundImage.
      * @return Bitmap of QR code
