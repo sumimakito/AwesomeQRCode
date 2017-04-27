@@ -4,6 +4,10 @@ An awesome<del>(simple)</del> QR code generator.
 
 一个优雅的<del>(不起眼的)</del> QR 二维码生成器
 
+### Get sample APK 下载演示 APK
+
+<a href="https://play.google.com/store/apps/details?id=com.github.sumimakito.awesomeqrsample" target="_blank" width="200"><img src="art/play_store_badge.png" alt="Google Play Store"></a>
+
 ### Examples 样例
 
 > Try to scan these QR codes below with your smart phone.
