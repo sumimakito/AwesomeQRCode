@@ -1,4 +1,4 @@
-package com.github.sumimakito.awesomeqr;
+package com.github.sumimakito.awesomeqrsample;
 
 import org.junit.Test;
 
