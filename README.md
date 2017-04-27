@@ -8,8 +8,9 @@ An awesome QR code generator.
 
 > Try to scan these QR codes below with your smart phone.
 
------------- | -------------
-![Example 1](art/awesome-qr-1.png) | ![Example 2](art/awesome-qr-2.png) | ![Example 3](art/awesome-qr-3.png)
+Example 1|Example 2|Example 3
+------------ | ------------- | -------------
+<img src="art/awesome-qr-1.png" width="400"> | <img src="art/awesome-qr-2.png" width="400"> | <img src="art/awesome-qr-3.png" width="400">
 
 ### Would you like to buy me a cup of cappuccino? 要请我喝一杯卡布奇诺吗？
 PayPal | Alipay
