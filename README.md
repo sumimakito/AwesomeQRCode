@@ -1,8 +1,8 @@
 # AwesomeQRCode
 
-An awesome QR code generator.
+An awesome<del>(simple)</del> QR code generator.
 
-一个优雅的 QR 二维码生成器
+一个优雅的<del>(不起眼的)</del> QR 二维码生成器
 
 ### Examples 样例
 
