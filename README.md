@@ -6,7 +6,7 @@ An awesome<del>(simple)</del> QR code generator.
 
 ### Get sample APK 下载演示 APK
 
-<a href="https://play.google.com/store/apps/details?id=com.github.sumimakito.awesomeqrsample" target="_blank" width="200"><img src="art/play_store_badge.png" alt="Google Play Store"></a>
+<a href="https://play.google.com/store/apps/details?id=com.github.sumimakito.awesomeqrsample" target="_blank"><img src="art/play_store_badge.png" alt="Google Play Store" width="200"></a>
 
 ### Examples 样例
 
