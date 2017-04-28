@@ -1,4 +1,4 @@
-# AwesomeQRCode
+# AwesomeQRCode [![](https://jitpack.io/v/SumiMakito/AwesomeQRCode.svg)](https://jitpack.io/#SumiMakito/AwesomeQRCode)
 
 An awesome<del>(simple)</del> QR code generator for Android.
 
@@ -19,6 +19,25 @@ Redirect to [Awesome-qr.js](https://github.com/SumiMakito/Awesome-qr.js)
 Example 1|Example 2|Example 3
 ------------ | ------------- | -------------
 <img src="art/awesome-qr-1.png" width="400"> | <img src="art/awesome-qr-2.png" width="400"> | <img src="art/awesome-qr-3.png" width="400">
+
+### Add dependency, 添加依赖项
+
+Add below lines in build.gradle of your project:
+```
+allprojects {
+	repositories {
+		...
+		maven { url 'https://jitpack.io' }
+	}
+}
+```
+
+Then, add below lines in build.gradle of your app module:
+```
+dependencies {
+        compile 'com.github.SumiMakito:AwesomeQRCode:1.0.0'
+}
+```
 
 ### Quick start, 快速上手
 
