@@ -1,14 +1,18 @@
 # AwesomeQRCode
 
-An awesome<del>(simple)</del> QR code generator.
+An awesome<del>(simple)</del> QR code generator for Android.
 
 一个优雅的<del>(不起眼的)</del> QR 二维码生成器
 
-### Get sample APK 下载演示 APK
+### Awesome-qr.js written in JavaScript, 支持 JavaScript 的 Awesome-qr.js
+
+Redirect to [Awesome-qr.js](https://github.com/SumiMakito/Awesome-qr.js)
+
+### Get sample APK, 下载演示 APK
 
 <a href="https://play.google.com/store/apps/details?id=com.github.sumimakito.awesomeqrsample" target="_blank"><img src="art/play_store_badge.png" alt="Google Play Store" width="200"></a>
 
-### Examples 样例
+### Examples, 样例
 
 > Try to scan these QR codes below with your smart phone.
 
@@ -16,13 +20,13 @@ Example 1|Example 2|Example 3
 ------------ | ------------- | -------------
 <img src="art/awesome-qr-1.png" width="400"> | <img src="art/awesome-qr-2.png" width="400"> | <img src="art/awesome-qr-3.png" width="400">
 
-### Quick start 快速上手
+### Quick start, 快速上手
 
 ```java
 Bitmap qrCode = AwesomeQRCode.create("Makito loves Kafuu Chino.", 800, 20, 0.3f, Color.BLACK, Color.WHITE, backgroundBitmap, true, true);
 ```
 
-### Parameters 参数
+### Parameters, 参数
 
 ```java
 public static Bitmap create(
@@ -44,7 +48,7 @@ PayPal | Alipay
 [PayPal](https://www.paypal.me/makito) | [Alipay](https://qr.alipay.com/a6x02021re1jk4ftcymlw79)
 
 
-### Copyright &amp; License 版权信息与授权协议
+### Copyright &amp; License, 版权信息与授权协议
 
 Copyright &copy; 2017 Sumi Makito
 

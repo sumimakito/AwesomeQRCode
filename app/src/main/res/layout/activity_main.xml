@@ -30,6 +30,18 @@
                 android:orientation="horizontal" />
 
             <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="5dp"
+                android:background="#75f"
+                android:gravity="center"
+                android:padding="10dp"
+                android:text="About the launcher icon, special thanks to\nFont Awesome by Dave Gandy - http://fontawesome.io"
+                android:textColor="#fff"
+                android:textSize="12sp"
+                android:textStyle="bold" />
+
+            <TextView
                 android:id="@+id/permissionHint"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -50,7 +62,7 @@
                 android:background="#8963a0"
                 android:gravity="center"
                 android:padding="10dp"
-                android:text="AwesomeQRCode, 2017 Copyright © Makito\nGet source code at GitHub: SumiMakito\nUnder Apache License, Version 2.0\n[ CLICK HERE ]"
+                android:text="AwesomeQRCode, 2017 Copyright © Makito\nGet source code at GitHub: SumiMakito\nClick here to view on GitHub"
                 android:textColor="#fff"
                 android:textSize="12sp"
                 android:textStyle="bold" />
@@ -63,7 +75,7 @@
                 android:background="#448800"
                 android:gravity="center"
                 android:padding="10dp"
-                android:text="Awesome-qr.js is also available!\n[ CLICK HERE ]"
+                android:text="Awesome-qr.js is also available!\nClick here to view on GitHub"
                 android:textColor="#fff"
                 android:textSize="12sp"
                 android:textStyle="bold" />
