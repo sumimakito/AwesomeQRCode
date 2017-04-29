@@ -4,7 +4,7 @@ An awesome<del>(simple)</del> QR code generator for Android.
 
 一个优雅的<del>(不起眼的)</del> QR 二维码生成器
 
-### EFQRCode in Swift
+### Introducing EFQRCode written in Swift
 
 EFQRCode is a tool to generate QRCode image or recognize QRCode from image, in Swift.
 
