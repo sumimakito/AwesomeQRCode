@@ -38,6 +38,7 @@ public class AwesomeQRCode {
      * This default value makes data blocks appear smaller.
      */
     private static float DEFAULT_DTA_DOT_SCALE = 0.3f;
+    private static int DEFAULT_BINARIZING_THRESHOLD = 128;
 
     public static Bitmap create(String contents, int size, int margin, int colorDark, int colorLight) throws IllegalArgumentException {
         return create(contents, size, margin, DEFAULT_DTA_DOT_SCALE, colorDark, colorLight, null, true, true);
@@ -52,25 +53,41 @@ public class AwesomeQRCode {
     }
 
     public static Bitmap create(String contents, int size, int margin, float dataDotScale, int colorDark, int colorLight, Bitmap backgroundImage, boolean whiteMargin) throws IllegalArgumentException {
-        return create(contents, size, margin, dataDotScale, colorDark, colorLight, backgroundImage, whiteMargin, true);
+        return create(contents, size, margin, dataDotScale, colorDark, colorLight, backgroundImage, whiteMargin, false);
+    }
+
+    public static Bitmap create(String contents, int size, int margin, float dataDotScale, Bitmap backgroundImage, boolean whiteMargin, boolean binarize) throws IllegalArgumentException {
+        return create(contents, size, margin, dataDotScale, Color.BLACK, Color.WHITE, backgroundImage, whiteMargin, true, binarize, DEFAULT_BINARIZING_THRESHOLD);
+    }
+
+    public static Bitmap create(String contents, int size, int margin, float dataDotScale, Bitmap backgroundImage, boolean whiteMargin, boolean binarize, int binarizeThreshold) throws IllegalArgumentException {
+        return create(contents, size, margin, dataDotScale, Color.BLACK, Color.WHITE, backgroundImage, whiteMargin, true, binarize, binarizeThreshold);
+    }
+
+    public static Bitmap create(String contents, int size, int margin, float dataDotScale, int colorDark, int colorLight, Bitmap backgroundImage, boolean whiteMargin, boolean autoColor) throws IllegalArgumentException {
+        return create(contents, size, margin, dataDotScale, colorDark, colorLight, backgroundImage, whiteMargin, autoColor, false, DEFAULT_BINARIZING_THRESHOLD);
+    }
+
+    public static Bitmap create(String contents, int size, int margin, float dataDotScale, int colorDark, int colorLight, Bitmap backgroundImage, boolean whiteMargin, boolean autoColor, boolean binarize) throws IllegalArgumentException {
+        return create(contents, size, margin, dataDotScale, colorDark, colorLight, backgroundImage, whiteMargin, autoColor, binarize, DEFAULT_BINARIZING_THRESHOLD);
     }
 
     /**
      * Create a QR matrix and render it use given configs.
      *
-     * @param contents Contents to encode.
-     * @param size Width as well as the height of the output QR code, includes margin.
-     * @param margin Margin to add around the QR code.
-     * @param dataDotScale Scale the data blocks and makes them appear smaller.
-     * @param colorDark Color of blocks. Will be OVERRIDE by autoColor. (BYTE_DTA, BYTE_POS, BYTE_AGN, BYTE_TMG)
-     * @param colorLight Color of empty space. Will be OVERRIDE by autoColor. (BYTE_EPT)
+     * @param contents        Contents to encode.
+     * @param size            Width as well as the height of the output QR code, includes margin.
+     * @param margin          Margin to add around the QR code.
+     * @param dataDotScale    Scale the data blocks and makes them appear smaller.
+     * @param colorDark       Color of blocks. Will be OVERRIDE by autoColor. (BYTE_DTA, BYTE_POS, BYTE_AGN, BYTE_TMG)
+     * @param colorLight      Color of empty space. Will be OVERRIDE by autoColor. (BYTE_EPT)
      * @param backgroundImage The background image to embed in the QR code. If null, no background image will be embedded.
-     * @param whiteMargin If true, background image will not be drawn on the margin area.
-     * @param autoColor If true, colorDark will be set to the dominant color of backgroundImage.
+     * @param whiteMargin     If true, background image will not be drawn on the margin area.
+     * @param autoColor       If true, colorDark will be set to the dominant color of backgroundImage.
      * @return Bitmap of QR code
      * @throws IllegalArgumentException Refer to the messages below.
      */
-    public static Bitmap create(String contents, int size, int margin, float dataDotScale, int colorDark, int colorLight, Bitmap backgroundImage, boolean whiteMargin, boolean autoColor) throws IllegalArgumentException {
+    public static Bitmap create(String contents, int size, int margin, float dataDotScale, int colorDark, int colorLight, Bitmap backgroundImage, boolean whiteMargin, boolean autoColor, boolean binarize, int binarizeThreshold) throws IllegalArgumentException {
         if (contents.isEmpty()) {
             throw new IllegalArgumentException("Error: contents is empty. (contents.isEmpty())");
         }
@@ -90,10 +107,10 @@ public class AwesomeQRCode {
         if (dataDotScale < 0 || dataDotScale > 1) {
             throw new IllegalArgumentException("Error: an illegal data dot scale is given. (dataDotScale < 0 || dataDotScale > 1)");
         }
-        return render(byteMatrix, size - 2 * margin, margin, dataDotScale, colorDark, colorLight, backgroundImage, whiteMargin, autoColor);
+        return render(byteMatrix, size - 2 * margin, margin, dataDotScale, colorDark, colorLight, backgroundImage, whiteMargin, autoColor, binarize, binarizeThreshold);
     }
 
-    private static Bitmap render(ByteMatrix byteMatrix, int innerRenderedSize, int margin, float dataDotScale, int colorDark, int colorLight, Bitmap backgroundImage, boolean whiteMargin, boolean autoColor) {
+    private static Bitmap render(ByteMatrix byteMatrix, int innerRenderedSize, int margin, float dataDotScale, int colorDark, int colorLight, Bitmap backgroundImage, boolean whiteMargin, boolean autoColor, boolean binarize, int binarizeThreshold) {
         int nCount = byteMatrix.getWidth();
         float nWidth = (float) innerRenderedSize / nCount;
         float nHeight = (float) innerRenderedSize / nCount;
@@ -112,6 +129,16 @@ public class AwesomeQRCode {
             colorDark = getDominantColor(backgroundImage);
         }
 
+        if (binarize && backgroundImage != null) {
+            int threshold = DEFAULT_BINARIZING_THRESHOLD;
+            if (binarizeThreshold > 0 && binarizeThreshold < 255) {
+                threshold = binarizeThreshold;
+            }
+            colorDark = Color.BLACK;
+            colorLight = Color.WHITE;
+            binarize(backgroundImageScaled, threshold);
+        }
+
         Paint paint = new Paint();
         Paint paintDark = new Paint();
         paintDark.setColor(colorDark);
@@ -126,6 +153,8 @@ public class AwesomeQRCode {
         Canvas canvas = new Canvas(renderedBitmap);
         canvas.drawColor(Color.WHITE);
         canvas.drawBitmap(backgroundImageScaled, whiteMargin ? margin : 0, whiteMargin ? margin : 0, paint);
+
+
         for (int row = 0; row < byteMatrix.getHeight(); row++) {
             String s = "";
             for (int col = 0; col < byteMatrix.getWidth(); col++) {
@@ -223,9 +252,8 @@ public class AwesomeQRCode {
     }
 
     /**
-     *
-     * @param contents Contents to encode.
-     * @param  errorCorrectionLevel ErrorCorrectionLevel
+     * @param contents             Contents to encode.
+     * @param errorCorrectionLevel ErrorCorrectionLevel
      * @return QR code object.
      * @throws WriterException Refer to the messages below.
      */
@@ -307,6 +335,20 @@ public class AwesomeQRCode {
         green = Math.max(0, Math.min(0xFF, green / c));
         blue = Math.max(0, Math.min(0xFF, blue / c));
         return (0xFF << 24) | (red << 16) | (green << 8) | blue;
+    }
+
+    private static void binarize(Bitmap bitmap, int threshold) {
+        int r, g, b;
+        for (int y = 0; y < bitmap.getHeight(); y++) {
+            for (int x = 0; x < bitmap.getHeight(); x++) {
+                int color = bitmap.getPixel(x, y);
+                r = (color >> 16) & 0xFF;
+                g = (color >> 8) & 0xFF;
+                b = color & 0xFF;
+                float sum = 0.30f * r + 0.59f * g + 0.11f * b;
+                bitmap.setPixel(x, y, sum > threshold ? Color.WHITE : Color.BLACK);
+            }
+        }
     }
 }
 

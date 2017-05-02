@@ -4,20 +4,6 @@ An awesome<del>(simple)</del> QR code generator for Android.
 
 一个优雅的<del>(不起眼的)</del> QR 二维码生成器
 
-### Introducing EFQRCode written in Swift
-
-EFQRCode is a tool to generate QRCode image or recognize QRCode from image, in Swift.
-
-AwesomeQRCode is inspired by [EFQRCode by EyreFree](https://github.com/EyreFree/EFQRCode).
-
-If your application is in need of generating pretty QR codes in Swift, take a look at EFQRCode.
-
-It should help.
-
-### Awesome-qr.js written in JavaScript, 支持 JavaScript 的 Awesome-qr.js
-
-Redirect to [Awesome-qr.js](https://github.com/SumiMakito/Awesome-qr.js)
-
 ### Get sample APK, 下载演示 APK
 
 <a href="https://play.google.com/store/apps/details?id=com.github.sumimakito.awesomeqrsample" target="_blank"><img src="art/play_store_badge.png" alt="Google Play Store" width="200"></a>
@@ -67,15 +53,38 @@ public static Bitmap create(
         int colorLight,         // Color of empty space. Will be OVERRIDE by autoColor. (BYTE_EPT) 空白点的颜色
         Bitmap backgroundImage, // The background image to embed in the QR code. If null, no background image will be embedded. 欲嵌入的背景图
         boolean whiteMargin,    // If true, background image will not be drawn on the margin area. Default is true. 若为 true, 则背景图将不会绘制到外边距区域
-        boolean autoColor       // If true, colorDark will be set to the dominant color of backgroundImage. Default is true. 若为 true, 则将从背景图取主要颜色作为实点颜色
+        boolean autoColor,      // If true, colorDark will be set to the dominant color of backgroundImage. Default is true. 若为 true, 则将从背景图取主要颜色作为实点颜色
+        boolean binarize,       // If true, background images will be binarized. Default is false. 若为 true, 背景图像将被二值化处理
+        int binarizeThreshold   // Threshold value used while binarizing background images. Default is 128. 0 < threshold < 255. 控制背景图像二值化的阈值
 ) throws IllegalArgumentException { ... }
 ```
+
+### Changelog, 更新日志
+
+#### 1.0.1
+Now background images can be binarized as you like.
+
+#### 1.0.0
+Initial release.
+
+### Alternatives on other platforms/in other languages. 其他平台或语言下的对等项目
+
+#### EFQRCode written in Swift
+
+EFQRCode is a tool to generate QRCode image or recognize QRCode from image, in Swift.
+
+AwesomeQRCode is inspired by [EFQRCode by EyreFree](https://github.com/EyreFree/EFQRCode).
+
+If your application is in need of generating pretty QR codes in Swift, take a look at EFQRCode. It should help.
+
+#### Awesome-qr.js written in JavaScript, 支持 JavaScript 的 Awesome-qr.js
+
+Redirect to [Awesome-qr.js](https://github.com/SumiMakito/Awesome-qr.js)
 
 ### Would you like to buy me a cup of cappuccino? 要请我喝一杯卡布奇诺吗？
 PayPal | Alipay
 ----|----
 [PayPal](https://www.paypal.me/makito) | [Alipay](https://qr.alipay.com/a6x02021re1jk4ftcymlw79)
-
 
 ### Copyright &amp; License, 版权信息与授权协议
 

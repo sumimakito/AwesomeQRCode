@@ -170,10 +170,10 @@
                 android:id="@+id/colorDark"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:enabled="false"
                 android:hint="colorDark"
                 android:lines="1"
                 android:maxLines="1"
-                android:enabled="false"
                 android:singleLine="true" />
 
 
@@ -212,6 +212,31 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="White margin on background image" />
+
+            <CheckBox
+                android:id="@+id/binarize"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Binarize background image" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:paddingLeft="4dp"
+                android:paddingRight="4dp"
+                android:text="binarizeThreshold (0 &lt; threshold &lt; 255)" />
+
+            <EditText
+                android:id="@+id/binarizeThreshold"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:enabled="false"
+                android:hint="128"
+                android:lines="1"
+                android:maxLines="1"
+                android:inputType="number"
+                android:singleLine="true" />
 
             <Button
                 android:id="@+id/generate"
