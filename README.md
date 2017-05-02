@@ -68,7 +68,7 @@ public static Bitmap create(
 ### Changelog, 更新日志
 
 #### 1.0.2
-Added an optional parameter which enables the data dots appear as filled circles.
+Added an optional parameter which enables the data dots to appear as filled circles.
 
 #### 1.0.1
 Now background images can be binarized as you like.
