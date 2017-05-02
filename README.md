@@ -65,7 +65,7 @@ public static Bitmap create(
 Now background images can be binarized as you like.
 
 #### 1.0.0
-Initial release
+Initial release.
 
 ### Alternatives on other platforms/in other languages. 其他平台或语言下的对等项目
 
