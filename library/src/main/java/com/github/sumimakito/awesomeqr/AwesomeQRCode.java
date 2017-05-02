@@ -53,7 +53,7 @@ public class AwesomeQRCode {
     }
 
     public static Bitmap create(String contents, int size, int margin, float dataDotScale, int colorDark, int colorLight, Bitmap backgroundImage, boolean whiteMargin) throws IllegalArgumentException {
-        return create(contents, size, margin, dataDotScale, colorDark, colorLight, backgroundImage, whiteMargin, true);
+        return create(contents, size, margin, dataDotScale, colorDark, colorLight, backgroundImage, whiteMargin, false);
     }
 
     public static Bitmap create(String contents, int size, int margin, float dataDotScale, Bitmap backgroundImage, boolean whiteMargin, boolean binarize) throws IllegalArgumentException {
@@ -129,11 +129,13 @@ public class AwesomeQRCode {
             colorDark = getDominantColor(backgroundImage);
         }
 
-        if (binarize) {
+        if (binarize && backgroundImage != null) {
             int threshold = DEFAULT_BINARIZING_THRESHOLD;
             if (binarizeThreshold > 0 && binarizeThreshold < 255) {
                 threshold = binarizeThreshold;
             }
+            colorDark = Color.BLACK;
+            colorLight = Color.WHITE;
             binarize(backgroundImageScaled, threshold);
         }
 

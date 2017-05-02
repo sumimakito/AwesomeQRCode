@@ -63,7 +63,7 @@ public class MainActivity extends AppCompatActivity {
         btGenerate = (Button) findViewById(R.id.generate);
         ckbWhiteMargin = (CheckBox) findViewById(R.id.whiteMargin);
         ckbAutoColor = (CheckBox) findViewById(R.id.autoColor);
-        ckbBinarize= (CheckBox) findViewById(R.id.autoColor);
+        ckbBinarize= (CheckBox) findViewById(R.id.binarize);
         etBinarizeThreshold = (EditText) findViewById(R.id.binarizeThreshold);
 
         ckbAutoColor.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -71,6 +71,13 @@ public class MainActivity extends AppCompatActivity {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 etColorLight.setEnabled(!isChecked);
                 etColorDark.setEnabled(!isChecked);
+            }
+        });
+
+        ckbBinarize.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                etBinarizeThreshold.setEnabled(isChecked);
             }
         });
 
@@ -103,7 +110,8 @@ public class MainActivity extends AppCompatActivity {
                             etDotScale.getText().length() == 0 ? 0.3f : Float.parseFloat(etDotScale.getText().toString()),
                             ckbAutoColor.isChecked() ? Color.BLACK : Color.parseColor(etColorDark.getText().toString()),
                             ckbAutoColor.isChecked() ? Color.WHITE : Color.parseColor(etColorLight.getText().toString()),
-                            backgroundImage, ckbWhiteMargin.isChecked(),
+                            backgroundImage,
+                            ckbWhiteMargin.isChecked(),
                             ckbAutoColor.isChecked(),
                             ckbBinarize.isChecked(),
                             etBinarizeThreshold.getText().length() == 0 ? 128 : Integer.parseInt(etBinarizeThreshold.getText().toString())
