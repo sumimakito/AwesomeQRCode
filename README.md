@@ -57,7 +57,9 @@ public static Bitmap create(
         int colorLight,         // Color of empty space. Will be OVERRIDE by autoColor. (BYTE_EPT) 空白点的颜色
         Bitmap backgroundImage, // The background image to embed in the QR code. If null, no background image will be embedded. 欲嵌入的背景图
         boolean whiteMargin,    // If true, background image will not be drawn on the margin area. Default is true. 若为 true, 则背景图将不会绘制到外边距区域
-        boolean autoColor       // If true, colorDark will be set to the dominant color of backgroundImage. Default is true. 若为 true, 则将从背景图取主要颜色作为实点颜色
+        boolean autoColor,      // If true, colorDark will be set to the dominant color of backgroundImage. Default is true. 若为 true, 则将从背景图取主要颜色作为实点颜色
+        boolean binarize,       // If true, background images will be binarized. Default is false. 若为 true, 背景图像将被二值化处理
+        int binarizeThreshold   // Threshold value used while binarizing background images. Default is 128. 0 < threshold < 255. 控制背景图像二值化的阈值
 ) throws IllegalArgumentException { ... }
 ```
 
