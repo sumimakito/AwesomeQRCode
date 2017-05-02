@@ -16,6 +16,11 @@ Example 1|Example 2|Example 3
 ------------ | ------------- | -------------
 <img src="art/awesome-qr-1.png" width="400"> | <img src="art/awesome-qr-2.png" width="400"> | <img src="art/awesome-qr-3.png" width="400">
 
+
+Rounded data dots|Binarized background
+------------ | ------------- | -------------
+<img src="art/awesome-qr-4.png" width="400"> | <img src="art/awesome-qr-5.png" width="400">
+
 ### Add dependency, 添加依赖项
 
 Add below lines in build.gradle of your project:
@@ -31,7 +36,7 @@ allprojects {
 Then, add below lines in build.gradle of your app module:
 ```
 dependencies {
-        compile 'com.github.SumiMakito:AwesomeQRCode:1.0.0'
+        compile 'com.github.SumiMakito:AwesomeQRCode:1.0.2'
 }
 ```
 
@@ -61,6 +66,9 @@ public static Bitmap create(
 ```
 
 ### Changelog, 更新日志
+
+#### 1.0.2
+Added an optional parameter which enables the data dots appear as filled circles.
 
 #### 1.0.1
 Now background images can be binarized as you like.

@@ -62,6 +62,11 @@ public class AwesomeQRCode {
     }
 
     public static Bitmap create(String contents, int size, int margin, float dataDotScale, Bitmap backgroundImage,
+                                boolean whiteMargin, boolean binarize, boolean roundedDataDots) throws IllegalArgumentException {
+        return create(contents, size, margin, dataDotScale, Color.BLACK, Color.WHITE, backgroundImage, whiteMargin, true, binarize, DEFAULT_BINARIZING_THRESHOLD, roundedDataDots);
+    }
+
+    public static Bitmap create(String contents, int size, int margin, float dataDotScale, Bitmap backgroundImage,
                                 boolean whiteMargin, boolean binarize, int binarizeThreshold) throws IllegalArgumentException {
         return create(contents, size, margin, dataDotScale, Color.BLACK, Color.WHITE, backgroundImage, whiteMargin, true, binarize, binarizeThreshold, false);
     }
