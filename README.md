@@ -18,7 +18,7 @@ Example 1|Example 2|Example 3
 
 
 Rounded data dots|Binarized background
------------- | ------------- | -------------
+------------ | -------------
 <img src="art/awesome-qr-4.png" width="400"> | <img src="art/awesome-qr-5.png" width="400">
 
 ### Add dependency, 添加依赖项
