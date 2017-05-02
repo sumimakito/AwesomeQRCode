@@ -41,6 +41,7 @@ public class MainActivity extends AppCompatActivity {
     private EditText etDotScale;
     private TextView tvJSHint;
     private CheckBox ckbBinarize;
+    private CheckBox ckbRoundedDataDots;
     private EditText etBinarizeThreshold;
 
     @Override
@@ -63,7 +64,8 @@ public class MainActivity extends AppCompatActivity {
         btGenerate = (Button) findViewById(R.id.generate);
         ckbWhiteMargin = (CheckBox) findViewById(R.id.whiteMargin);
         ckbAutoColor = (CheckBox) findViewById(R.id.autoColor);
-        ckbBinarize= (CheckBox) findViewById(R.id.binarize);
+        ckbBinarize = (CheckBox) findViewById(R.id.binarize);
+        ckbRoundedDataDots = (CheckBox) findViewById(R.id.rounded);
         etBinarizeThreshold = (EditText) findViewById(R.id.binarizeThreshold);
 
         ckbAutoColor.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -103,7 +105,6 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 try {
-
                     generate(etContents.getText().length() == 0 ? "Makito loves Kafuu Chino." : etContents.getText().toString(),
                             etSize.getText().length() == 0 ? 800 : Integer.parseInt(etSize.getText().toString()),
                             etMargin.getText().length() == 0 ? 20 : Integer.parseInt(etMargin.getText().toString()),
@@ -114,7 +115,8 @@ public class MainActivity extends AppCompatActivity {
                             ckbWhiteMargin.isChecked(),
                             ckbAutoColor.isChecked(),
                             ckbBinarize.isChecked(),
-                            etBinarizeThreshold.getText().length() == 0 ? 128 : Integer.parseInt(etBinarizeThreshold.getText().toString())
+                            etBinarizeThreshold.getText().length() == 0 ? 128 : Integer.parseInt(etBinarizeThreshold.getText().toString()),
+                            ckbRoundedDataDots.isChecked()
                     );
                 } catch (Exception e) {
                     Toast.makeText(MainActivity.this, "Error occurred, please check your configs.", Toast.LENGTH_LONG).show();
@@ -141,6 +143,8 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(i);
             }
         });
+
+        btGenerate.callOnClick();
     }
 
     @Override
@@ -183,7 +187,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void generate(final String contents, final int size, final int margin, final float dotScale,
                           final int colorDark, final int colorLight, final Bitmap background, final boolean whiteMargin,
-                          final boolean autoColor, final boolean binarize, final int binarizeThreshold) {
+                          final boolean autoColor, final boolean binarize, final int binarizeThreshold, final boolean roundedDD) {
         if (generating) return;
         generating = true;
         progressDialog = new ProgressDialog.Builder(this).setMessage("Generating...").setCancelable(false).create();
@@ -192,7 +196,9 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void run() {
                 try {
-                    final Bitmap b = AwesomeQRCode.create(contents, size, margin, dotScale, colorDark, colorLight, background, whiteMargin, autoColor, binarize, binarizeThreshold);
+                    final Bitmap b = AwesomeQRCode.create(contents, size, margin, dotScale, colorDark,
+                            colorLight, background, whiteMargin, autoColor, binarize, binarizeThreshold,
+                            roundedDD);
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {

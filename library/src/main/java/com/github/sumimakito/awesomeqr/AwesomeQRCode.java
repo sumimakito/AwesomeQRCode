@@ -34,9 +34,6 @@ public class AwesomeQRCode {
     private static final int BYTE_TMG = 0x4;
     private static final int BYTE_PTC = 0x5;
 
-    /**
-     * This default value makes data blocks appear smaller.
-     */
     private static float DEFAULT_DTA_DOT_SCALE = 0.3f;
     private static int DEFAULT_BINARIZING_THRESHOLD = 128;
 
@@ -44,50 +41,63 @@ public class AwesomeQRCode {
         return create(contents, size, margin, DEFAULT_DTA_DOT_SCALE, colorDark, colorLight, null, true, true);
     }
 
-    public static Bitmap create(String contents, int size, int margin, int colorDark, int colorLight, Bitmap backgroundImage) throws IllegalArgumentException {
+    public static Bitmap create(String contents, int size, int margin, int colorDark, int colorLight,
+                                Bitmap backgroundImage) throws IllegalArgumentException {
         return create(contents, size, margin, DEFAULT_DTA_DOT_SCALE, colorDark, colorLight, backgroundImage, true, true);
     }
 
-    public static Bitmap create(String contents, int size, int margin, int colorDark, int colorLight, Bitmap backgroundImage, boolean whiteMargin) throws IllegalArgumentException {
+    public static Bitmap create(String contents, int size, int margin, int colorDark, int colorLight,
+                                Bitmap backgroundImage, boolean whiteMargin) throws IllegalArgumentException {
         return create(contents, size, margin, DEFAULT_DTA_DOT_SCALE, colorDark, colorLight, backgroundImage, whiteMargin, true);
     }
 
-    public static Bitmap create(String contents, int size, int margin, float dataDotScale, int colorDark, int colorLight, Bitmap backgroundImage, boolean whiteMargin) throws IllegalArgumentException {
+    public static Bitmap create(String contents, int size, int margin, float dataDotScale, int colorDark, int colorLight,
+                                Bitmap backgroundImage, boolean whiteMargin) throws IllegalArgumentException {
         return create(contents, size, margin, dataDotScale, colorDark, colorLight, backgroundImage, whiteMargin, false);
     }
 
-    public static Bitmap create(String contents, int size, int margin, float dataDotScale, Bitmap backgroundImage, boolean whiteMargin, boolean binarize) throws IllegalArgumentException {
-        return create(contents, size, margin, dataDotScale, Color.BLACK, Color.WHITE, backgroundImage, whiteMargin, true, binarize, DEFAULT_BINARIZING_THRESHOLD);
+    public static Bitmap create(String contents, int size, int margin, float dataDotScale, Bitmap backgroundImage,
+                                boolean whiteMargin, boolean binarize) throws IllegalArgumentException {
+        return create(contents, size, margin, dataDotScale, Color.BLACK, Color.WHITE, backgroundImage, whiteMargin, true, binarize, DEFAULT_BINARIZING_THRESHOLD, false);
     }
 
-    public static Bitmap create(String contents, int size, int margin, float dataDotScale, Bitmap backgroundImage, boolean whiteMargin, boolean binarize, int binarizeThreshold) throws IllegalArgumentException {
-        return create(contents, size, margin, dataDotScale, Color.BLACK, Color.WHITE, backgroundImage, whiteMargin, true, binarize, binarizeThreshold);
+    public static Bitmap create(String contents, int size, int margin, float dataDotScale, Bitmap backgroundImage,
+                                boolean whiteMargin, boolean binarize, int binarizeThreshold) throws IllegalArgumentException {
+        return create(contents, size, margin, dataDotScale, Color.BLACK, Color.WHITE, backgroundImage, whiteMargin, true, binarize, binarizeThreshold, false);
     }
 
-    public static Bitmap create(String contents, int size, int margin, float dataDotScale, int colorDark, int colorLight, Bitmap backgroundImage, boolean whiteMargin, boolean autoColor) throws IllegalArgumentException {
-        return create(contents, size, margin, dataDotScale, colorDark, colorLight, backgroundImage, whiteMargin, autoColor, false, DEFAULT_BINARIZING_THRESHOLD);
+    public static Bitmap create(String contents, int size, int margin, float dataDotScale, int colorDark,
+                                int colorLight, Bitmap backgroundImage, boolean whiteMargin, boolean autoColor) throws IllegalArgumentException {
+        return create(contents, size, margin, dataDotScale, colorDark, colorLight, backgroundImage, whiteMargin, autoColor, false);
     }
 
-    public static Bitmap create(String contents, int size, int margin, float dataDotScale, int colorDark, int colorLight, Bitmap backgroundImage, boolean whiteMargin, boolean autoColor, boolean binarize) throws IllegalArgumentException {
-        return create(contents, size, margin, dataDotScale, colorDark, colorLight, backgroundImage, whiteMargin, autoColor, binarize, DEFAULT_BINARIZING_THRESHOLD);
+    public static Bitmap create(String contents, int size, int margin, float dataDotScale, int colorDark,
+                                int colorLight, Bitmap backgroundImage, boolean whiteMargin, boolean autoColor,
+                                boolean binarize) throws IllegalArgumentException {
+        return create(contents, size, margin, dataDotScale, colorDark, colorLight, backgroundImage, whiteMargin, autoColor, binarize, DEFAULT_BINARIZING_THRESHOLD, false);
     }
 
     /**
      * Create a QR matrix and render it use given configs.
      *
-     * @param contents        Contents to encode.
-     * @param size            Width as well as the height of the output QR code, includes margin.
-     * @param margin          Margin to add around the QR code.
-     * @param dataDotScale    Scale the data blocks and makes them appear smaller.
-     * @param colorDark       Color of blocks. Will be OVERRIDE by autoColor. (BYTE_DTA, BYTE_POS, BYTE_AGN, BYTE_TMG)
-     * @param colorLight      Color of empty space. Will be OVERRIDE by autoColor. (BYTE_EPT)
-     * @param backgroundImage The background image to embed in the QR code. If null, no background image will be embedded.
-     * @param whiteMargin     If true, background image will not be drawn on the margin area.
-     * @param autoColor       If true, colorDark will be set to the dominant color of backgroundImage.
+     * @param contents          Contents to encode.
+     * @param size              Width as well as the height of the output QR code, includes margin.
+     * @param margin            Margin to add around the QR code.
+     * @param dataDotScale      Scale the data blocks and makes them appear smaller.
+     * @param colorDark         Color of blocks. Will be OVERRIDE by autoColor. (BYTE_DTA, BYTE_POS, BYTE_AGN, BYTE_TMG)
+     * @param colorLight        Color of empty space. Will be OVERRIDE by autoColor. (BYTE_EPT)
+     * @param backgroundImage   The background image to embed in the QR code. If null, no background image will be embedded.
+     * @param whiteMargin       If true, background image will not be drawn on the margin area.
+     * @param autoColor         If true, colorDark will be set to the dominant color of backgroundImage.
+     * @param binarize          If true, background images will be binarized. Default is false.
+     * @param binarizeThreshold Threshold value used while binarizing background images. Default is 128. 0 < threshold < 255.
+     * @param roundedDataDots   If true, data blocks will appear as filled circles. Default is false.
      * @return Bitmap of QR code
      * @throws IllegalArgumentException Refer to the messages below.
      */
-    public static Bitmap create(String contents, int size, int margin, float dataDotScale, int colorDark, int colorLight, Bitmap backgroundImage, boolean whiteMargin, boolean autoColor, boolean binarize, int binarizeThreshold) throws IllegalArgumentException {
+    public static Bitmap create(String contents, int size, int margin, float dataDotScale, int colorDark,
+                                int colorLight, Bitmap backgroundImage, boolean whiteMargin, boolean autoColor,
+                                boolean binarize, int binarizeThreshold, boolean roundedDataDots) throws IllegalArgumentException {
         if (contents.isEmpty()) {
             throw new IllegalArgumentException("Error: contents is empty. (contents.isEmpty())");
         }
@@ -107,10 +117,12 @@ public class AwesomeQRCode {
         if (dataDotScale < 0 || dataDotScale > 1) {
             throw new IllegalArgumentException("Error: an illegal data dot scale is given. (dataDotScale < 0 || dataDotScale > 1)");
         }
-        return render(byteMatrix, size - 2 * margin, margin, dataDotScale, colorDark, colorLight, backgroundImage, whiteMargin, autoColor, binarize, binarizeThreshold);
+        return render(byteMatrix, size - 2 * margin, margin, dataDotScale, colorDark, colorLight, backgroundImage, whiteMargin, autoColor, binarize, binarizeThreshold, roundedDataDots);
     }
 
-    private static Bitmap render(ByteMatrix byteMatrix, int innerRenderedSize, int margin, float dataDotScale, int colorDark, int colorLight, Bitmap backgroundImage, boolean whiteMargin, boolean autoColor, boolean binarize, int binarizeThreshold) {
+    private static Bitmap render(ByteMatrix byteMatrix, int innerRenderedSize, int margin, float dataDotScale,
+                                 int colorDark, int colorLight, Bitmap backgroundImage, boolean whiteMargin,
+                                 boolean autoColor, boolean binarize, int binarizeThreshold, boolean roundedDataDots) {
         int nCount = byteMatrix.getWidth();
         float nWidth = (float) innerRenderedSize / nCount;
         float nHeight = (float) innerRenderedSize / nCount;
@@ -143,12 +155,15 @@ public class AwesomeQRCode {
         Paint paintDark = new Paint();
         paintDark.setColor(colorDark);
         paintDark.setAntiAlias(true);
+        paintDark.setStyle(Paint.Style.FILL);
         Paint paintLight = new Paint();
         paintLight.setColor(colorLight);
         paintLight.setAntiAlias(true);
+        paintLight.setStyle(Paint.Style.FILL);
         Paint paintProtector = new Paint();
         paintProtector.setColor(Color.argb(120, 255, 255, 255));
         paintProtector.setAntiAlias(true);
+        paintProtector.setStyle(Paint.Style.FILL);
 
         Canvas canvas = new Canvas(renderedBitmap);
         canvas.drawColor(Color.WHITE);
@@ -156,7 +171,6 @@ public class AwesomeQRCode {
 
 
         for (int row = 0; row < byteMatrix.getHeight(); row++) {
-            String s = "";
             for (int col = 0; col < byteMatrix.getWidth(); col++) {
                 switch (byteMatrix.get(col, row)) {
                     case BYTE_AGN:
@@ -169,17 +183,24 @@ public class AwesomeQRCode {
                                 margin + (row + 1.0f) * nHeight,
                                 paintDark
                         );
-                        s += "Ｘ";
                         break;
                     case BYTE_DTA:
-                        canvas.drawRect(
-                                margin + (col + 0.5f * (1 - dataDotScale)) * nWidth,
-                                margin + (row + 0.5f * (1 - dataDotScale)) * nHeight,
-                                margin + (col + 0.5f * (1 + dataDotScale)) * nWidth,
-                                margin + (row + 0.5f * (1 + dataDotScale)) * nHeight,
-                                paintDark
-                        );
-                        s += "〇";
+                        if (roundedDataDots) {
+                            canvas.drawCircle(
+                                    margin + (col + 0.5f) * nWidth,
+                                    margin + (row + 0.5f) * nHeight,
+                                    dataDotScale * nHeight * 0.5f,
+                                    paintDark
+                            );
+                        } else {
+                            canvas.drawRect(
+                                    margin + (col + 0.5f * (1 - dataDotScale)) * nWidth,
+                                    margin + (row + 0.5f * (1 - dataDotScale)) * nHeight,
+                                    margin + (col + 0.5f * (1 + dataDotScale)) * nWidth,
+                                    margin + (row + 0.5f * (1 + dataDotScale)) * nHeight,
+                                    paintDark
+                            );
+                        }
                         break;
                     case BYTE_PTC:
                         canvas.drawRect(
@@ -189,21 +210,27 @@ public class AwesomeQRCode {
                                 margin + (row + 1.0f) * nHeight,
                                 paintProtector
                         );
-                        s += "＋";
                         break;
                     case BYTE_EPT:
-                        canvas.drawRect(
-                                margin + (col + 0.5f * (1 - dataDotScale)) * nWidth,
-                                margin + (row + 0.5f * (1 - dataDotScale)) * nHeight,
-                                margin + (col + 0.5f * (1 + dataDotScale)) * nWidth,
-                                margin + (row + 0.5f * (1 + dataDotScale)) * nHeight,
-                                paintLight
-                        );
-                        s += "　";
+                        if (roundedDataDots) {
+                            canvas.drawCircle(
+                                    margin + (col + 0.5f) * nWidth,
+                                    margin + (row + 0.5f) * nHeight,
+                                    dataDotScale * nHeight * 0.5f,
+                                    paintLight
+                            );
+                        } else {
+                            canvas.drawRect(
+                                    margin + (col + 0.5f * (1 - dataDotScale)) * nWidth,
+                                    margin + (row + 0.5f * (1 - dataDotScale)) * nHeight,
+                                    margin + (col + 0.5f * (1 + dataDotScale)) * nWidth,
+                                    margin + (row + 0.5f * (1 + dataDotScale)) * nHeight,
+                                    paintLight
+                            );
+                        }
                         break;
                 }
             }
-            Log.d("QR_MAPPING", s);
         }
 
         return renderedBitmap;
