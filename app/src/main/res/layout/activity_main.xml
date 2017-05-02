@@ -251,6 +251,15 @@
                 android:layout_centerHorizontal="true"
                 android:text="Generate" />
 
+
+            <Button
+                android:id="@+id/open"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_centerHorizontal="true"
+                android:text="Save image" />
+
             <ImageView
                 android:id="@+id/qrcode"
                 android:layout_width="300dp"

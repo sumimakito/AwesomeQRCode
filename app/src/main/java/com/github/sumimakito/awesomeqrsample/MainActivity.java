@@ -9,9 +9,11 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.net.Uri;
+import android.os.Environment;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Base64;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -23,6 +25,12 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.github.sumimakito.awesomeqr.AwesomeQRCode;
+
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -43,6 +51,8 @@ public class MainActivity extends AppCompatActivity {
     private CheckBox ckbBinarize;
     private CheckBox ckbRoundedDataDots;
     private EditText etBinarizeThreshold;
+    private Bitmap qrBitmap;
+    private Button btOpen;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,6 +72,7 @@ public class MainActivity extends AppCompatActivity {
         btSelectBG = (Button) findViewById(R.id.backgroundImage);
         btRemoveBackgroundImage = (Button) findViewById(R.id.removeBackgroundImage);
         btGenerate = (Button) findViewById(R.id.generate);
+        btOpen = (Button) findViewById(R.id.open);
         ckbWhiteMargin = (CheckBox) findViewById(R.id.whiteMargin);
         ckbAutoColor = (CheckBox) findViewById(R.id.autoColor);
         ckbBinarize = (CheckBox) findViewById(R.id.binarize);
@@ -90,6 +101,13 @@ public class MainActivity extends AppCompatActivity {
                 intent.addCategory(Intent.CATEGORY_OPENABLE);
                 intent.setType("image/*");
                 startActivityForResult(intent, SELECT_FILE_REQUEST_CODE);
+            }
+        });
+
+        btOpen.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (qrBitmap != null) saveBitmap(qrBitmap);
             }
         });
 
@@ -196,13 +214,13 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void run() {
                 try {
-                    final Bitmap b = AwesomeQRCode.create(contents, size, margin, dotScale, colorDark,
+                    qrBitmap = AwesomeQRCode.create(contents, size, margin, dotScale, colorDark,
                             colorLight, background, whiteMargin, autoColor, binarize, binarizeThreshold,
                             roundedDD);
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            qrCodeImageView.setImageBitmap(b);
+                            qrCodeImageView.setImageBitmap(qrBitmap);
                             scrollView.post(new Runnable() {
                                 @Override
                                 public void run() {
@@ -225,5 +243,32 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         }).start();
+    }
+
+    private void saveBitmap(Bitmap bitmap) {
+        FileOutputStream fos = null;
+        try {
+            ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+            bitmap.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOutputStream);
+            byte[] byteArray = byteArrayOutputStream.toByteArray();
+            File outputFile = new File(getPublicContainer(), System.currentTimeMillis() + ".png");
+            fos = new FileOutputStream(outputFile);
+            fos.write(byteArray);
+            fos.close();
+            Toast.makeText(this, "Image saved to " + outputFile.getAbsolutePath(), Toast.LENGTH_LONG).show();
+        } catch (Exception e) {
+            e.printStackTrace();
+            Toast.makeText(this, "Failed to save the image.", Toast.LENGTH_LONG).show();
+        }
+    }
+
+    public static File getPublicContainer() {
+        File musicContainer = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
+        File aqr = new File(musicContainer, "AwesomeQR");
+        if (aqr.exists() && !aqr.isDirectory()) {
+            aqr.delete();
+        }
+        aqr.mkdirs();
+        return aqr;
     }
 }
