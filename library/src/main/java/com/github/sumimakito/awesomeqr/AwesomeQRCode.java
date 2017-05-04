@@ -15,6 +15,7 @@ import com.google.zxing.qrcode.encoder.Encoder;
 import com.google.zxing.qrcode.encoder.QRCode;
 
 import java.util.HashMap;
+import java.util.Hashtable;
 import java.util.Map;
 
 public class AwesomeQRCode {
@@ -293,7 +294,8 @@ public class AwesomeQRCode {
         if (contents.isEmpty()) {
             throw new IllegalArgumentException("Found empty contents");
         }
-        Map<EncodeHintType, ErrorCorrectionLevel> hintMap = new HashMap<>();
+        Hashtable<EncodeHintType, Object> hintMap = new Hashtable<>();
+        hintMap.put(EncodeHintType.CHARACTER_SET, "UTF-8");
         hintMap.put(EncodeHintType.ERROR_CORRECTION, errorCorrectionLevel);
         return Encoder.encode(contents, errorCorrectionLevel, hintMap);
     }
