@@ -36,7 +36,7 @@ allprojects {
 Then, add below lines in build.gradle of your app module:
 ```
 dependencies {
-        compile 'com.github.SumiMakito:AwesomeQRCode:1.0.2'
+        compile 'com.github.SumiMakito:AwesomeQRCode:1.0.3'
 }
 ```
 
@@ -66,6 +66,10 @@ public static Bitmap create(
 ```
 
 ### Changelog, 更新日志
+
+#### 1.0.3
+Added CHARACTER_SET => UTF-8 to QR code's hints before encoding.
+Fixed an encoding issue mentioned in [#7](https://github.com/SumiMakito/AwesomeQRCode/issues/7).
 
 #### 1.0.2
 Added an optional parameter which enables the data dots to appear as filled circles.
