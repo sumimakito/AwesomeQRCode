@@ -4,7 +4,7 @@ An awesome<del>(simple)</del> QR code generator for Android.
 
 一个优雅的<del>(不起眼的)</del> QR 二维码生成器
 
-![Special, thus awesome.](art/banner.png)
+<img alt="Special, thus awesome." src="art/banner.png" style="max-width: 600px;">
 
 ### Get sample APK, 下载演示 APK
 
