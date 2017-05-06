@@ -4,6 +4,8 @@ An awesome<del>(simple)</del> QR code generator for Android.
 
 一个优雅的<del>(不起眼的)</del> QR 二维码生成器
 
+![Special, thus awesome.](art/banner.png)
+
 ### Get sample APK, 下载演示 APK
 
 <a href="https://play.google.com/store/apps/details?id=com.github.sumimakito.awesomeqrsample" target="_blank"><img src="art/play_store_badge.png" alt="Google Play Store" width="200"></a>
