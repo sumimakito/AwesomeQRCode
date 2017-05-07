@@ -13,8 +13,9 @@ import android.os.Environment;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Base64;
+import android.view.KeyEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
@@ -28,13 +29,12 @@ import com.github.sumimakito.awesomeqr.AwesomeQRCode;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.io.IOException;
 
 public class MainActivity extends AppCompatActivity {
 
-    private final int SELECT_FILE_REQUEST_CODE = 822;
+    private final int BKG_IMAGE = 822;
+    private final int LOGO_IMAGE = 379;
 
     private ImageView qrCodeImageView;
     private EditText etColorLight, etColorDark, etContents, etMargin, etSize;
@@ -53,12 +53,23 @@ public class MainActivity extends AppCompatActivity {
     private EditText etBinarizeThreshold;
     private Bitmap qrBitmap;
     private Button btOpen;
+    private EditText etLogoMargin;
+    private EditText etLogoScale;
+    private EditText etLogoCornerRadius;
+    private Button btRemoveLogoImage;
+    private Button btSelectLogo;
+    private Bitmap logoImage;
+    private ViewGroup configViewContainer, resultViewContainer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        configViewContainer = (ViewGroup) findViewById(R.id.configViewContainer);
+        resultViewContainer = (ViewGroup) findViewById(R.id.resultViewContainer);
+
+        scrollView = (ScrollView) findViewById(R.id.scrollView);
         scrollView = (ScrollView) findViewById(R.id.scrollView);
         tvAuthorHint = (TextView) findViewById(R.id.authorHint);
         tvJSHint = (TextView) findViewById(R.id.jsHint);
@@ -70,13 +81,19 @@ public class MainActivity extends AppCompatActivity {
         etMargin = (EditText) findViewById(R.id.margin);
         etDotScale = (EditText) findViewById(R.id.dotScale);
         btSelectBG = (Button) findViewById(R.id.backgroundImage);
+        btSelectLogo = (Button) findViewById(R.id.logoImage);
         btRemoveBackgroundImage = (Button) findViewById(R.id.removeBackgroundImage);
+        btRemoveLogoImage = (Button) findViewById(R.id.removeLogoImage);
         btGenerate = (Button) findViewById(R.id.generate);
         btOpen = (Button) findViewById(R.id.open);
         ckbWhiteMargin = (CheckBox) findViewById(R.id.whiteMargin);
         ckbAutoColor = (CheckBox) findViewById(R.id.autoColor);
         ckbBinarize = (CheckBox) findViewById(R.id.binarize);
         ckbRoundedDataDots = (CheckBox) findViewById(R.id.rounded);
+        etBinarizeThreshold = (EditText) findViewById(R.id.binarizeThreshold);
+        etLogoMargin = (EditText) findViewById(R.id.logoMargin);
+        etLogoScale = (EditText) findViewById(R.id.logoScale);
+        etLogoCornerRadius = (EditText) findViewById(R.id.logoRadius);
         etBinarizeThreshold = (EditText) findViewById(R.id.binarizeThreshold);
 
         ckbAutoColor.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -100,7 +117,17 @@ public class MainActivity extends AppCompatActivity {
                 Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
                 intent.addCategory(Intent.CATEGORY_OPENABLE);
                 intent.setType("image/*");
-                startActivityForResult(intent, SELECT_FILE_REQUEST_CODE);
+                startActivityForResult(intent, BKG_IMAGE);
+            }
+        });
+
+        btSelectLogo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
+                intent.addCategory(Intent.CATEGORY_OPENABLE);
+                intent.setType("image/*");
+                startActivityForResult(intent, LOGO_IMAGE);
             }
         });
 
@@ -119,6 +146,14 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        btRemoveLogoImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                logoImage = null;
+                Toast.makeText(MainActivity.this, "Logo image removed.", Toast.LENGTH_SHORT).show();
+            }
+        });
+
         btGenerate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -134,7 +169,11 @@ public class MainActivity extends AppCompatActivity {
                             ckbAutoColor.isChecked(),
                             ckbBinarize.isChecked(),
                             etBinarizeThreshold.getText().length() == 0 ? 128 : Integer.parseInt(etBinarizeThreshold.getText().toString()),
-                            ckbRoundedDataDots.isChecked()
+                            ckbRoundedDataDots.isChecked(),
+                            logoImage,
+                            etLogoMargin.getText().length() == 0 ? 10 : Integer.parseInt(etLogoMargin.getText().toString()),
+                            etLogoCornerRadius.getText().length() == 0 ? 8 : Integer.parseInt(etLogoCornerRadius.getText().toString()),
+                            etLogoScale.getText().length() == 0 ? 10 : Float.parseFloat(etLogoScale.getText().toString())
                     );
                 } catch (Exception e) {
                     Toast.makeText(MainActivity.this, "Error occurred, please check your configs.", Toast.LENGTH_LONG).show();
@@ -190,14 +229,23 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == SELECT_FILE_REQUEST_CODE && resultCode == RESULT_OK && data.getData() != null) {
+        if (resultCode == RESULT_OK && data.getData() != null) {
             try {
                 Uri imageUri = data.getData();
-                backgroundImage = BitmapFactory.decodeFile(ContentHelper.absolutePathFromUri(this, imageUri));
-                Toast.makeText(this, "Background image added.", Toast.LENGTH_SHORT).show();
+                if (requestCode == BKG_IMAGE) {
+                    backgroundImage = BitmapFactory.decodeFile(ContentHelper.absolutePathFromUri(this, imageUri));
+                    Toast.makeText(this, "Background image added.", Toast.LENGTH_SHORT).show();
+                } else if (requestCode == LOGO_IMAGE) {
+                    logoImage = BitmapFactory.decodeFile(ContentHelper.absolutePathFromUri(this, imageUri));
+                    Toast.makeText(this, "Logo image added.", Toast.LENGTH_SHORT).show();
+                }
             } catch (Exception e) {
                 e.printStackTrace();
-                Toast.makeText(this, "Failed to add the background image.", Toast.LENGTH_SHORT).show();
+                if (requestCode == BKG_IMAGE) {
+                    Toast.makeText(this, "Failed to add the background image.", Toast.LENGTH_SHORT).show();
+                } else if (requestCode == LOGO_IMAGE) {
+                    Toast.makeText(this, "Failed to add the logo image.", Toast.LENGTH_SHORT).show();
+                }
             }
         }
         super.onActivityResult(requestCode, resultCode, data);
@@ -205,7 +253,8 @@ public class MainActivity extends AppCompatActivity {
 
     private void generate(final String contents, final int size, final int margin, final float dotScale,
                           final int colorDark, final int colorLight, final Bitmap background, final boolean whiteMargin,
-                          final boolean autoColor, final boolean binarize, final int binarizeThreshold, final boolean roundedDD) {
+                          final boolean autoColor, final boolean binarize, final int binarizeThreshold, final boolean roundedDD,
+                          final Bitmap logoImage, final int logoMargin, final int logoCornerRadius, final float logoScale) {
         if (generating) return;
         generating = true;
         progressDialog = new ProgressDialog.Builder(this).setMessage("Generating...").setCancelable(false).create();
@@ -216,17 +265,13 @@ public class MainActivity extends AppCompatActivity {
                 try {
                     qrBitmap = AwesomeQRCode.create(contents, size, margin, dotScale, colorDark,
                             colorLight, background, whiteMargin, autoColor, binarize, binarizeThreshold,
-                            roundedDD);
+                            roundedDD, logoImage, logoMargin, logoCornerRadius, logoScale);
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
                             qrCodeImageView.setImageBitmap(qrBitmap);
-                            scrollView.post(new Runnable() {
-                                @Override
-                                public void run() {
-                                    scrollView.fullScroll(View.FOCUS_DOWN);
-                                }
-                            });
+                            configViewContainer.setVisibility(View.GONE);
+                            resultViewContainer.setVisibility(View.VISIBLE);
                             if (progressDialog != null) progressDialog.dismiss();
                             generating = false;
                         }
@@ -237,6 +282,8 @@ public class MainActivity extends AppCompatActivity {
                         @Override
                         public void run() {
                             if (progressDialog != null) progressDialog.dismiss();
+                            configViewContainer.setVisibility(View.VISIBLE);
+                            resultViewContainer.setVisibility(View.GONE);
                             generating = false;
                         }
                     });
@@ -270,5 +317,17 @@ public class MainActivity extends AppCompatActivity {
         }
         aqr.mkdirs();
         return aqr;
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            if (configViewContainer.getVisibility() != View.VISIBLE) {
+                configViewContainer.setVisibility(View.VISIBLE);
+                resultViewContainer.setVisibility(View.GONE);
+                return true;
+            }
+        }
+        return super.onKeyDown(keyCode, event);
     }
 }

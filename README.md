@@ -19,11 +19,11 @@ Example 1|Example 2|Example 3
 <img src="art/awesome-qr-1.png" width="400"> | <img src="art/awesome-qr-2.png" width="400"> | <img src="art/awesome-qr-3.png" width="400">
 
 
-Rounded data dots|Binarized background
+Solid dots instead of blocks|Binarized|With logo at the center
 ------------ | -------------
-<img src="art/awesome-qr-4.png" width="400"> | <img src="art/awesome-qr-5.png" width="400">
+<img src="art/awesome-qr-4.png" width="400"> | <img src="art/awesome-qr-5.png" width="400"> | <img src="art/awesome-qr-6.png" width="400">
 
-### Add dependency, 添加依赖项
+### Add dependency into your project, 添加依赖项
 
 Add below lines in build.gradle of your project:
 ```
@@ -38,36 +38,71 @@ allprojects {
 Then, add below lines in build.gradle of your app module:
 ```
 dependencies {
-        compile 'com.github.SumiMakito:AwesomeQRCode:1.0.3'
+        compile 'com.github.SumiMakito:AwesomeQRCode:1.0.4'
 }
 ```
 
 ### Quick start, 快速上手
 
 ```java
-Bitmap qrCode = AwesomeQRCode.create("Makito loves Kafuu Chino.", 800, 20, 0.3f, Color.BLACK, Color.WHITE, backgroundBitmap, true, true);
+Bitmap qrCode = AwesomeQRCode.create("Makito loves Kafuu Chino.", 800, 20);
+Bitmap qrCodeWithBackground = AwesomeQRCode.create("Makito loves Kafuu Chino.", 800, 20, backgroundBitmap);
+Bitmap qrCodeWithLogo = AwesomeQRCode.create("Makito loves Kafuu Chino.", 800, 20, null, logoBitmap);
+Bitmap qrCodeWithBackgroundAndLogo = AwesomeQRCode.create("Makito loves Kafuu Chino.", 800, 20, backgroundBitmap, logoBitmap);
 ```
 
 ### Parameters, 参数
 
+> Here's a full list of all parameters, but some of them are optional. You can view all the possible simplified methods at the end of AwesomeQRCode.java.
+
+> (Translation) 以下列出全部参数，但其中部分参数是可选的。关于简化的调用方法，请查看 AwesomeQRCode.java 的结尾部分。
+
 ```java
 public static Bitmap create(
-        String contents,            // Contents to encode. 欲编码的内容
-        int size,                   // Width as well as the height of the output QR code, includes margin. 尺寸, 长宽一致
-        int margin,                 // Margin to add around the QR code. 二维码边缘的外边距
-        float dataDotScale,         // Scale the data blocks and makes them appear smaller. 数据点缩小比例 (0 < scale < 1.0f)
-        int colorDark,              // Color of blocks. Will be OVERRIDE by autoColor. (BYTE_DTA, BYTE_POS, BYTE_AGN, BYTE_TMG) 实点的颜色
-        int colorLight,             // Color of empty space. Will be OVERRIDE by autoColor. (BYTE_EPT) 空白点的颜色
-        Bitmap backgroundImage,     // The background image to embed in the QR code. If null, no background image will be embedded. 欲嵌入的背景图
-        boolean whiteMargin,        // If true, background image will not be drawn on the margin area. Default is true. 若为 true, 则背景图将不会绘制到外边距区域
-        boolean autoColor,          // If true, colorDark will be set to the dominant color of backgroundImage. Default is true. 若为 true, 则将从背景图取主要颜色作为实点颜色
-        boolean binarize,           // If true, background images will be binarized. Default is false. 若为 true, 背景图像将被二值化处理
-        int binarizeThreshold,      // Threshold value used while binarizing background images. Default is 128. 0 < threshold < 255. 控制背景图像二值化的阈值
-        boolean roundedDataDots     // If true, data blocks will appear as filled circles. Default is false. 若为 true, 数据点将以圆形绘制
+        String contents,
+        int size,
+        int margin,
+        float dataDotScale,
+        int colorDark,
+        int colorLight,
+        Bitmap backgroundImage,
+        boolean whiteMargin,
+        boolean autoColor,
+        boolean binarize,
+        int binarizeThreshold,
+        boolean roundedDataDots,
+        Bitmap logoImage,
+        int logoMargin,
+        int logoCornerRadius,
+        float logoScale
 ) throws IllegalArgumentException { ... }
 ```
 
+Parameter | Explanation
+----|----
+contents (String) | Contents to encode. 欲编码的内容
+size (int-px) | Width as well as the height of the output QR code, includes margin. 尺寸, 长宽一致, 包含外边距
+margin (int-px) | Margin to add around the QR code. 二维码图像的外边距, 默认 20px
+dataDotScale (float) | Value used to scale down the data dots' size. (0 < scale < 1.0f) 数据区域点缩小比例
+colorDark (int-color) | Color of "true" blocks. Works only when both colorDark and colorLight are set. (BYTE_DTA, BYTE_POS, BYTE_AGN, BYTE_TMG) 实点的颜色
+colorLight (int-color) | Color of empty space, or "false" blocks. Works only when both colorDark and colorLight are set. (BYTE_EPT) 空白区的颜色
+backgroundImage (Bitmap) | Background image to embed in the QR code. Leave null to disable. 欲嵌入的背景图, 设为 null 以禁用
+whiteMargin (int-px) | If set to true, a white border will appear around the background image. Default is true. 若设为 true, 背景图外将绘制白色边框
+autoColor (boolean) | If set to true, the dominant color of backgroundImage will be used as colorDark. Default is true. 若为 true, 背景图的主要颜色将作为实点的颜色, 即 colorDark
+binarize (boolean) | If set to true, the whole image will be binarized with the given threshold, or default threshold if not specified. Default is false. 若为 true, 背景图像将被二值化处理, 未指定阈值则使用默认值
+binarizeThreshold (int) | Threshold used to binarize the whole image. Default is 128. (0 < threshold < 255) 二值化处理的阈值
+roundedDataDots (boolean) | If set to true, data dots will appear as solid dots instead of blocks. Default is false. 若为 true, 数据点将以圆点绘制, 取代默认的小方块
+logoImage (Bitmap) | Logo image to embed at the center of generated QR code. Leave null to disable. 欲嵌入至二维码中心的 LOGO 标识, 设为 null 以禁用
+logoMargin (int-px) | White margin that appears around the logo image. Leave 0 to disable. LOGO 标识周围的空白边框, 设为 0 以禁用
+logoCornerRadius (int-px) | Radius of the logo's corners. Leave 0 to disable. LOGO 标识及其边框的圆角半径, 设为 0 以禁用
+logoScale (float) | Value used to scale the logo image. Larger value may result in decode failure. Size of the logo equals to `logoScale*(size-2*margin)`. Default is 0.2f. 用于计算 LOGO 大小的值, 过大将导致解码失败, LOGO 尺寸计算公式 `logoScale*(size-2*margin)`, 默认 0.2f
+
+
 ### Changelog, 更新日志
+
+#### 1.0.4
+New feature: Embedding a logo image in the QR code.
+Sample/Demo application updated.
 
 #### 1.0.3
 Added CHARACTER_SET => UTF-8 to QR code's hints before encoding.
