@@ -89,7 +89,7 @@ colorLight (int-color) | Color of empty space, or "false" blocks. Works only whe
 backgroundImage (Bitmap) | Background image to embed in the QR code. Leave null to disable. 欲嵌入的背景图, 设为 null 以禁用
 whiteMargin (int-px) | If set to true, a white border will appear around the background image. Default is true. 若设为 true, 背景图外将绘制白色边框
 autoColor (boolean) | If set to true, the dominant color of backgroundImage will be used as colorDark. Default is true. 若为 true, 背景图的主要颜色将作为实点的颜色, 即 colorDark
-binarize (boolean) | If set to true, the whole image will be binarized with the given threshold, or default threshold if not specified. Default is false. 若为 true, 背景图像将被二值化处理, 未指定阈值则使用默认值
+binarize (boolean) | If set to true, the whole image will be binarized with the given threshold, or default threshold if not specified. Default is false. 若为 true, 图像将被二值化处理, 未指定阈值则使用默认值
 binarizeThreshold (int) | Threshold used to binarize the whole image. Default is 128. (0 < threshold < 255) 二值化处理的阈值
 roundedDataDots (boolean) | If set to true, data dots will appear as solid dots instead of blocks. Default is false. 若为 true, 数据点将以圆点绘制, 取代默认的小方块
 logoImage (Bitmap) | Logo image to embed at the center of generated QR code. Leave null to disable. 欲嵌入至二维码中心的 LOGO 标识, 设为 null 以禁用
