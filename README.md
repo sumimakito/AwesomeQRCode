@@ -5,15 +5,15 @@
 
 An awesome<del>(simple)</del> QR code generator for Android.
 
-一个优雅的<del>(不起眼的)</del> QR 二维码生成器
+[切换至中文（简体）版本？](README-zh_CN.md)
 
 <img alt="Special, thus awesome." src="art/banner.png" style="max-width: 600px;">
 
-### Get sample APK, 下载演示 APK
+### Yay! Demo Available! 
 
 <a href="https://play.google.com/store/apps/details?id=com.github.sumimakito.awesomeqrsample" target="_blank"><img src="art/play_store_badge.png" alt="Google Play Store" width="200"></a>
 
-### Examples, 样例
+### Examples
 
 > Try to scan these QR codes below with your smart phone.
 
@@ -26,7 +26,7 @@ Solid dots instead of blocks|Binarized|With logo at the center
 ------------ | ------------- | -------------
 <img src="art/awesome-qr-4.png" width="400"> | <img src="art/awesome-qr-5.png" width="400"> | <img src="art/awesome-qr-6.png" width="400">
 
-### Add dependency into your project, 添加依赖项
+### Add dependency into your project
 
 Add below lines in build.gradle of your project:
 ```
@@ -41,86 +41,99 @@ allprojects {
 Then, add below lines in build.gradle of your app module:
 ```
 dependencies {
-        compile 'com.github.SumiMakito:AwesomeQRCode:1.0.4'
+        compile 'com.github.SumiMakito:AwesomeQRCode:1.0.5'
 }
 ```
 
-### Quick start, 快速上手
+### Quick start
+
+
+#### "I just wanna get a Bitmap":
+
+> In this case, QR code will be generated synchronously. Thus it means you may take a risk blocking the UI thread, which would lead to Application Not Responding (ANR). I strongly recommend you to use it in a non-UI thread.
 
 ```java
-Bitmap qrCode = AwesomeQRCode.create("Makito loves Kafuu Chino.", 800, 20);
-Bitmap qrCodeWithBackground = AwesomeQRCode.create("Makito loves Kafuu Chino.", 800, 20, backgroundBitmap);
-Bitmap qrCodeWithLogo = AwesomeQRCode.create("Makito loves Kafuu Chino.", 800, 20, null, logoBitmap);
-Bitmap qrCodeWithBackgroundAndLogo = AwesomeQRCode.create("Makito loves Kafuu Chino.", 800, 20, backgroundBitmap, logoBitmap);
+new Thread() {
+  @Override
+  public void run() {
+   super.run();
+   Bitmap qrCode = new AwesomeQRCode.Renderer()
+    .contents("Makito loves Kafuu Chino.")
+    .size(800).margin(20)
+    .render();
+  }.start();
 ```
 
-### Parameters, 参数
-
-> Here's a full list of all parameters, but some of them are optional. You can view all the possible simplified methods at the end of AwesomeQRCode.java.
-
-> (Translation) 以下列出全部参数，但其中部分参数是可选的。关于简化的调用方法，请查看 AwesomeQRCode.java 的结尾部分。
+#### Generate a QR code asynchronously and show the QR code in an ImageView:
 
 ```java
-public static Bitmap create(
-        String contents,
-        int size,
-        int margin,
-        float dataDotScale,
-        int colorDark,
-        int colorLight,
-        Bitmap backgroundImage,
-        boolean whiteMargin,
-        boolean autoColor,
-        boolean binarize,
-        int binarizeThreshold,
-        boolean roundedDataDots,
-        Bitmap logoImage,
-        int logoMargin,
-        int logoCornerRadius,
-        float logoScale
-) throws IllegalArgumentException { ... }
+new AwesomeQRCode.Renderer()
+ .contents("Makito loves Kafuu Chino.")
+ .size(800).margin(20)
+ .renderAsync(new AwesomeQRCode.Callback() {
+  @Override
+  public void onRendered(AwesomeQRCode.Renderer renderer, final Bitmap bitmap) {
+   runOnUiThread(new Runnable() {
+    @Override
+    public void run() {
+     // Tip: here we use runOnUiThread(...) to avoid the problems caused by operating UI elements from a non-UI thread.
+     imageView.setImageBitmap(bitmap);
+    }
+   });
+  }
+
+  @Override
+  public void onError(AwesomeQRCode.Renderer renderer, Exception e) {
+   e.printStackTrace();
+  }
+ });
 ```
 
-Parameter | Explanation
-----|----
-contents (String) | Contents to encode. 欲编码的内容
-size (int-px) | Width as well as the height of the output QR code, includes margin. 尺寸, 长宽一致, 包含外边距
-margin (int-px) | Margin to add around the QR code. 二维码图像的外边距, 默认 20px
-dataDotScale (float) | Value used to scale down the data dots' size. (0 < scale < 1.0f) 数据区域点缩小比例
-colorDark (int-color) | Color of "true" blocks. Works only when both colorDark and colorLight are set. (BYTE_DTA, BYTE_POS, BYTE_AGN, BYTE_TMG) 实点的颜色
-colorLight (int-color) | Color of empty space, or "false" blocks. Works only when both colorDark and colorLight are set. (BYTE_EPT) 空白区的颜色
-backgroundImage (Bitmap) | Background image to embed in the QR code. Leave null to disable. 欲嵌入的背景图, 设为 null 以禁用
-whiteMargin (int-px) | If set to true, a white border will appear around the background image. Default is true. 若设为 true, 背景图外将绘制白色边框
-autoColor (boolean) | If set to true, the dominant color of backgroundImage will be used as colorDark. Default is true. 若为 true, 背景图的主要颜色将作为实点的颜色, 即 colorDark
-binarize (boolean) | If set to true, the whole image will be binarized with the given threshold, or default threshold if not specified. Default is false. 若为 true, 图像将被二值化处理, 未指定阈值则使用默认值
-binarizeThreshold (int) | Threshold used to binarize the whole image. Default is 128. (0 < threshold < 255) 二值化处理的阈值
-roundedDataDots (boolean) | If set to true, data dots will appear as solid dots instead of blocks. Default is false. 若为 true, 数据点将以圆点绘制, 取代默认的小方块
-logoImage (Bitmap) | Logo image to embed at the center of generated QR code. Leave null to disable. 欲嵌入至二维码中心的 LOGO 标识, 设为 null 以禁用
-logoMargin (int-px) | White margin that appears around the logo image. Leave 0 to disable. LOGO 标识周围的空白边框, 设为 0 以禁用
-logoCornerRadius (int-px) | Radius of the logo's corners. Leave 0 to disable. LOGO 标识及其边框的圆角半径, 设为 0 以禁用
-logoScale (float) | Value used to scale the logo image. Larger value may result in decode failure. Size of the logo equals to `logoScale*(size-2*margin)`. Default is 0.2f. 用于计算 LOGO 大小的值, 过大将导致解码失败, LOGO 尺寸计算公式 `logoScale*(size-2*margin)`, 默认 0.2f
+### Parameters
+
+Parameter | Type | Explanation | Default Value | Misc.
+:----:|:------:|----|:--:|:--:
+contents | String | Contents to encode. | null | Required
+size | int-px | Width as well as the height of the output QR code, includes margin. | 800 | Required
+margin | int-px | Margin to add around the QR code. | 20 | Required 
+dataDotScale | float | Value used to scale down the data dots' size. | 0.3f | (0, 1.0f)
+colorDark | int-color | Color of "true" blocks. Works only when both colorDark and colorLight are set. | Color.BLACK | 
+colorLight | int-color | Color of empty space, or "false" blocks. Works only when both colorDark and colorLight are set. | Color.WHITE |
+background | Bitmap | Background image to embed in the QR code. Leave null to disable. | null | 
+whiteMargin | int-px | If set to true, a white border will appear around the background image. | true | 
+autoColor | boolean | If set to true, the dominant color of backgroundImage will be used as colorDark. | true | 
+binarize | boolean | If set to true, the whole image will be binarized with the given threshold, or default threshold if not specified. | fasle | 
+binarizeThreshold | int | Threshold used to binarize the whole image. | 128 | (0, 255)
+roundedDataDots | boolean | If set to true, data dots will appear as solid dots instead of blocks. | false | 
+logo | Bitmap | Logo image to embed at the center of generated QR code. Leave null to disable. | null | 
+logoMargin | int-px | White margin that appears around the logo image. Leave 0 to disable. LOGO | 10 | 
+logoCornerRadius | int-px | Radius of the logo's corners. Leave 0 to disable. | 8 | 
+logoScale | float | Value used to scale the logo image. Larger value may result in decode failure. | 0.2f | (0, 1.0f)
 
 
-### Changelog, 更新日志
+### Changelog
 
-#### 1.0.4
-New feature: Embedding a logo image in the QR code.
-Sample/Demo application updated.
+#### Version 1.0.5
+- The way to use AwesomeQRCode is more elegant.
 
-#### 1.0.3
-Added CHARACTER_SET => UTF-8 to QR code's hints before encoding.
-Fixed an encoding issue mentioned in [#7](https://github.com/SumiMakito/AwesomeQRCode/issues/7).
+#### Version 1.0.4
+- New feature: Embedding a logo image in the QR code.
+- Sample/Demo application updated.
 
-#### 1.0.2
-Added an optional parameter which enables the data dots to appear as filled circles.
+#### Version 1.0.3
+- Added CHARACTER_SET => UTF-8 to QR code's hints before encoding.
+- Fixed an encoding issue mentioned in [#7](https://github.com/SumiMakito/AwesomeQRCode/issues/7).
 
-#### 1.0.1
-Now background images can be binarized as you like.
+#### Version 1.0.2
+- Added an optional parameter which enables the data dots to appear as filled circles.
 
-#### 1.0.0
-Initial release.
+#### Version 1.0.1
+- Now background images can be binarized as you like.
 
-### Alternatives on other platforms/in other languages. 其他平台或语言下的对等项目
+#### Version 1.0.0
+- Initial release.
+
+### Alternatives
 
 #### EFQRCode written in Swift
 
@@ -130,16 +143,16 @@ AwesomeQRCode is inspired by [EFQRCode by EyreFree](https://github.com/EyreFree/
 
 If your application is in need of generating pretty QR codes in Swift, take a look at EFQRCode. It should help.
 
-#### Awesome-qr.js written in JavaScript, 支持 JavaScript 的 Awesome-qr.js
+#### Awesome-qr.js written in JavaScript
 
 Redirect to [Awesome-qr.js](https://github.com/SumiMakito/Awesome-qr.js)
 
-### Would you like to buy me a cup of cappuccino? 要请我喝一杯卡布奇诺吗？
+### Would you like to buy me a cup of cappuccino?
 PayPal | Alipay
 ----|----
 [PayPal](https://www.paypal.me/makito) | [Alipay](https://qr.alipay.com/a6x02021re1jk4ftcymlw79)
 
-### Copyright &amp; License, 版权信息与授权协议
+### Copyright &amp; License
 
 Copyright &copy; 2017 Sumi Makito
 

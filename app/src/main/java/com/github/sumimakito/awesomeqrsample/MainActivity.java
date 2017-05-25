@@ -269,37 +269,43 @@ public class MainActivity extends AppCompatActivity {
         generating = true;
         progressDialog = new ProgressDialog.Builder(this).setMessage("Generating...").setCancelable(false).create();
         progressDialog.show();
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    qrBitmap = AwesomeQRCode.create(contents, size, margin, dotScale, colorDark,
-                            colorLight, background, whiteMargin, autoColor, binarize, binarizeThreshold,
-                            roundedDD, logoImage, logoMargin, logoCornerRadius, logoScale);
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            qrCodeImageView.setImageBitmap(qrBitmap);
-                            configViewContainer.setVisibility(View.GONE);
-                            resultViewContainer.setVisibility(View.VISIBLE);
-                            if (progressDialog != null) progressDialog.dismiss();
-                            generating = false;
-                        }
-                    });
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            if (progressDialog != null) progressDialog.dismiss();
-                            configViewContainer.setVisibility(View.VISIBLE);
-                            resultViewContainer.setVisibility(View.GONE);
-                            generating = false;
-                        }
-                    });
-                }
-            }
-        }).start();
+        new AwesomeQRCode.Renderer().contents(contents)
+                .size(size).margin(margin).dotScale(dotScale)
+                .colorDark(colorDark).colorLight(colorLight)
+                .background(background).whiteMargin(whiteMargin)
+                .autoColor(autoColor).roundedDots(roundedDD)
+                .binarize(binarize).binarizeThreshold(binarizeThreshold)
+                .logo(logoImage).logoMargin(logoMargin)
+                .logoRadius(logoCornerRadius).logoScale(logoScale)
+                .renderAsync(new AwesomeQRCode.Callback() {
+                    @Override
+                    public void onRendered(AwesomeQRCode.Renderer renderer, final Bitmap bitmap) {
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                qrCodeImageView.setImageBitmap(bitmap);
+                                configViewContainer.setVisibility(View.GONE);
+                                resultViewContainer.setVisibility(View.VISIBLE);
+                                if (progressDialog != null) progressDialog.dismiss();
+                                generating = false;
+                            }
+                        });
+                    }
+
+                    @Override
+                    public void onError(AwesomeQRCode.Renderer renderer, Exception e) {
+                        e.printStackTrace();
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                if (progressDialog != null) progressDialog.dismiss();
+                                configViewContainer.setVisibility(View.VISIBLE);
+                                resultViewContainer.setVisibility(View.GONE);
+                                generating = false;
+                            }
+                        });
+                    }
+                });
     }
 
     private void saveBitmap(Bitmap bitmap) {

@@ -9,7 +9,6 @@ import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
 import android.graphics.Rect;
 import android.graphics.RectF;
-import android.util.Log;
 
 import com.google.zxing.EncodeHintType;
 import com.google.zxing.WriterException;
@@ -18,9 +17,7 @@ import com.google.zxing.qrcode.encoder.ByteMatrix;
 import com.google.zxing.qrcode.encoder.Encoder;
 import com.google.zxing.qrcode.encoder.QRCode;
 
-import java.util.HashMap;
 import java.util.Hashtable;
-import java.util.Map;
 
 public class AwesomeQRCode {
     /**
@@ -41,6 +38,7 @@ public class AwesomeQRCode {
 
     private static float DEFAULT_DTA_DOT_SCALE = 0.3f;
     private static float DEFAULT_LOGO_SCALE = 0.2f;
+    private static int DEFAULT_SIZE = 800;
     private static int DEFAULT_MARGIN = 20;
     private static int DEFAULT_LOGO_MARGIN = 10;
     private static int DEFAULT_LOGO_RADIUS = 8;
@@ -57,7 +55,7 @@ public class AwesomeQRCode {
      * @param colorLight        Color of empty space. Will be OVERRIDE by autoColor. (BYTE_EPT)
      * @param backgroundImage   The background image to embed in the QR code. If null, no background image will be embedded.
      * @param whiteMargin       If true, background image will not be drawn on the margin area.
-     * @param autoColor         If true, colorDark will be set to the dominant color of backgroundImage.
+     * @param autoColor         If true, colorDark will be set to the dominant color of background.
      * @param binarize          If true, all images will be binarized while rendering. Default is false.
      * @param binarizeThreshold Threshold value used while binarizing. Default is 128. 0 < threshold < 255.
      * @param roundedDataDots   If true, data blocks will appear as filled circles. Default is false.
@@ -68,10 +66,10 @@ public class AwesomeQRCode {
      * @return Bitmap of QR code
      * @throws IllegalArgumentException Refer to the messages below.
      */
-    public static Bitmap create(String contents, int size, int margin, float dataDotScale, int colorDark,
-                                int colorLight, Bitmap backgroundImage, boolean whiteMargin, boolean autoColor,
-                                boolean binarize, int binarizeThreshold, boolean roundedDataDots,
-                                Bitmap logoImage, int logoMargin, int logoCornerRadius, float logoScale) throws IllegalArgumentException {
+    private static Bitmap create(String contents, int size, int margin, float dataDotScale, int colorDark,
+                                 int colorLight, Bitmap backgroundImage, boolean whiteMargin, boolean autoColor,
+                                 boolean binarize, int binarizeThreshold, boolean roundedDataDots,
+                                 Bitmap logoImage, int logoMargin, int logoCornerRadius, float logoScale) throws IllegalArgumentException {
         if (contents.isEmpty()) {
             throw new IllegalArgumentException("Error: contents is empty. (contents.isEmpty())");
         }
@@ -396,82 +394,153 @@ public class AwesomeQRCode {
         }
     }
 
-    /* TONS OF SHORTENED METHODS */
+    public static class Renderer {
+        private String contents;
+        private int size;
+        private int margin;
+        private float dataDotScale;
+        private int colorDark;
+        private int colorLight;
+        private Bitmap backgroundImage;
+        private boolean whiteMargin;
+        private boolean autoColor;
+        private boolean binarize;
+        private int binarizeThreshold;
+        private boolean roundedDataDots;
+        private Bitmap logoImage;
+        private int logoMargin;
+        private int logoCornerRadius;
+        private float logoScale;
 
-    public static Bitmap create(String contents, int size, int margin) throws IllegalArgumentException {
-        return create(contents, size, margin, DEFAULT_DTA_DOT_SCALE, 0, 0, null, true, true, false, 0, false, null, 0, 0, 0);
+        public Renderer() {
+            size = DEFAULT_SIZE;
+            margin = DEFAULT_MARGIN;
+            dataDotScale = DEFAULT_DTA_DOT_SCALE;
+            colorDark = Color.BLACK;
+            colorLight = Color.WHITE;
+            colorDark = Color.BLACK;
+            whiteMargin = true;
+            autoColor = true;
+            binarize = false;
+            binarizeThreshold = DEFAULT_BINARIZING_THRESHOLD;
+            roundedDataDots = false;
+            logoMargin = DEFAULT_LOGO_MARGIN;
+            logoCornerRadius = DEFAULT_LOGO_RADIUS;
+            logoScale = DEFAULT_LOGO_SCALE;
+        }
+
+        public Renderer autoColor(boolean autoColor) {
+            this.autoColor = autoColor;
+            return this;
+        }
+
+        public Renderer background(Bitmap backgroundImage) {
+            this.backgroundImage = backgroundImage;
+            return this;
+        }
+
+        public Renderer binarize(boolean binarize) {
+            this.binarize = binarize;
+            return this;
+        }
+
+        public Renderer binarizeThreshold(int binarizeThreshold) {
+            this.binarizeThreshold = binarizeThreshold;
+            return this;
+        }
+
+        public Renderer colorDark(int colorDark) {
+            this.colorDark = colorDark;
+            return this;
+        }
+
+        public Renderer colorLight(int colorLight) {
+            this.colorLight = colorLight;
+            return this;
+        }
+
+        public Renderer contents(String contents) {
+            this.contents = contents;
+            return this;
+        }
+
+        public Renderer dotScale(float dataDotScale) {
+            this.dataDotScale = dataDotScale;
+            return this;
+        }
+
+        public Renderer logo(Bitmap logoImage) {
+            this.logoImage = logoImage;
+            return this;
+        }
+
+        public Renderer logoRadius(int logoCornerRadius) {
+            this.logoCornerRadius = logoCornerRadius;
+            return this;
+        }
+
+        public Renderer logoMargin(int logoMargin) {
+            this.logoMargin = logoMargin;
+            return this;
+        }
+
+        public Renderer logoScale(float logoScale) {
+            this.logoScale = logoScale;
+            return this;
+        }
+
+        public Renderer margin(int margin) {
+            this.margin = margin;
+            return this;
+        }
+
+        public Renderer roundedDots(boolean roundedDataDots) {
+            this.roundedDataDots = roundedDataDots;
+            return this;
+        }
+
+        public Renderer size(int size) {
+            this.size = size;
+            return this;
+        }
+
+        public Renderer whiteMargin(boolean whiteMargin) {
+            this.whiteMargin = whiteMargin;
+            return this;
+        }
+
+        public Bitmap render() throws IllegalArgumentException {
+            return create(
+                    contents, size, margin, dataDotScale, colorDark, colorLight,
+                    backgroundImage, whiteMargin, autoColor, binarize, binarizeThreshold,
+                    roundedDataDots, logoImage, logoMargin, logoCornerRadius, logoScale
+            );
+        }
+
+        public void renderAsync(final Callback callback) throws IllegalArgumentException {
+            new Thread() {
+                @Override
+                public void run() {
+                    super.run();
+                    try {
+                        Bitmap bitmap = create(
+                                contents, size, margin, dataDotScale, colorDark, colorLight,
+                                backgroundImage, whiteMargin, autoColor, binarize, binarizeThreshold,
+                                roundedDataDots, logoImage, logoMargin, logoCornerRadius, logoScale
+                        );
+                        if (callback != null) callback.onRendered(Renderer.this, bitmap);
+                    } catch (Exception e) {
+                        if (callback != null) callback.onError(Renderer.this, e);
+                    }
+                }
+            }.start();
+        }
     }
 
-    public static Bitmap create(String contents, int size, int margin, int colorDark, int colorLight) throws IllegalArgumentException {
-        return create(contents, size, margin, DEFAULT_DTA_DOT_SCALE, colorDark, colorLight, null, true, false, false, 0, false, null, 0, 0, 0);
-    }
+    public interface Callback {
+        void onRendered(Renderer renderer, Bitmap bitmap);
 
-    public static Bitmap create(String contents, int size, Bitmap backgroundImage) throws IllegalArgumentException {
-        return create(contents, size, DEFAULT_MARGIN, DEFAULT_DTA_DOT_SCALE, 0, 0, backgroundImage, true, true, false, 0, false, null, 0, 0, 0);
-    }
-
-    public static Bitmap create(String contents, int size, Bitmap backgroundImage, Bitmap logoImage) throws IllegalArgumentException {
-        return create(contents, size, DEFAULT_MARGIN, DEFAULT_DTA_DOT_SCALE, 0, 0, backgroundImage, true, true, false, 0, false, logoImage, DEFAULT_LOGO_MARGIN, DEFAULT_LOGO_RADIUS, DEFAULT_LOGO_SCALE);
-    }
-
-    public static Bitmap create(String contents, int size, int margin, int colorDark,
-                                int colorLight, Bitmap backgroundImage) throws IllegalArgumentException {
-        return create(contents, size, margin, DEFAULT_DTA_DOT_SCALE, colorDark, colorLight, backgroundImage,
-                true, false, false, 0, false, null, 0, 0, 0);
-    }
-
-    public static Bitmap create(String contents, int size, int colorDark,
-                                int colorLight, Bitmap backgroundImage, Bitmap logoImage) throws IllegalArgumentException {
-        return create(contents, size, DEFAULT_MARGIN, DEFAULT_DTA_DOT_SCALE, colorDark, colorLight, backgroundImage, true, false, false, 0,
-                false, logoImage, DEFAULT_LOGO_MARGIN, DEFAULT_LOGO_RADIUS, DEFAULT_LOGO_SCALE);
-    }
-
-    public static Bitmap create(String contents, int size, int margin, int colorDark,
-                                int colorLight, Bitmap backgroundImage, Bitmap logoImage) throws IllegalArgumentException {
-        return create(contents, size, margin, DEFAULT_DTA_DOT_SCALE, colorDark, colorLight, backgroundImage, true, false, false, 0,
-                false, logoImage, DEFAULT_LOGO_MARGIN, DEFAULT_LOGO_RADIUS, DEFAULT_LOGO_SCALE);
-    }
-
-    public static Bitmap create(String contents, int size, int margin, Bitmap backgroundImage) throws IllegalArgumentException {
-        return create(contents, size, margin, DEFAULT_DTA_DOT_SCALE, 0, 0, backgroundImage,
-                true, true, false, 0, false, null, 0, 0, 0);
-    }
-
-    public static Bitmap create(String contents, int size, int margin, Bitmap backgroundImage, boolean whiteMargin) throws IllegalArgumentException {
-        return create(contents, size, margin, DEFAULT_DTA_DOT_SCALE, 0, 0, backgroundImage,
-                whiteMargin, true, false, 0, false, null, 0, 0, 0);
-    }
-
-    public static Bitmap create(String contents, int size, int margin, Bitmap backgroundImage, boolean whiteMargin, boolean roundedDataDots) throws IllegalArgumentException {
-        return create(contents, size, margin, DEFAULT_DTA_DOT_SCALE, 0, 0, backgroundImage,
-                whiteMargin, true, false, 0, roundedDataDots, null, 0, 0, 0);
-    }
-
-    public static Bitmap create(String contents, int size, int margin, int colorDark, int colorLight, Bitmap backgroundImage, boolean whiteMargin)
-            throws IllegalArgumentException {
-        return create(contents, size, margin, DEFAULT_DTA_DOT_SCALE, colorDark, colorLight, backgroundImage,
-                whiteMargin, false, false, 0, false, null, 0, 0, 0);
-    }
-
-    public static Bitmap create(String contents, int size, int margin, float dataDotScale, int colorDark,
-                                int colorLight, Bitmap backgroundImage, boolean whiteMargin, boolean autoColor,
-                                boolean roundedDataDots) throws IllegalArgumentException {
-        return create(contents, size, margin, dataDotScale, colorDark, colorLight, backgroundImage,
-                whiteMargin, autoColor, false, 0, roundedDataDots, null, 0, 0, 0);
-    }
-
-    public static Bitmap create(String contents, int size, int margin, float dataDotScale, int colorDark,
-                                int colorLight, Bitmap backgroundImage, boolean whiteMargin, boolean autoColor,
-                                boolean binarize, int binarizeThreshold) throws IllegalArgumentException {
-        return create(contents, size, margin, dataDotScale, colorDark, colorLight, backgroundImage,
-                whiteMargin, autoColor, binarize, binarizeThreshold, false, null, 0, 0, 0);
-    }
-
-    public static Bitmap create(String contents, int size, int margin, float dataDotScale, int colorDark,
-                                int colorLight, Bitmap backgroundImage, boolean whiteMargin, boolean autoColor,
-                                boolean binarize, int binarizeThreshold, boolean roundedDataDots) throws IllegalArgumentException {
-        return create(contents, size, margin, dataDotScale, colorDark, colorLight, backgroundImage,
-                whiteMargin, autoColor, binarize, binarizeThreshold, roundedDataDots, null, 0, 0, 0);
+        void onError(Renderer renderer, Exception e);
     }
 }
 
