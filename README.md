@@ -5,6 +5,8 @@
 
 An awesome<del>(simple)</del> QR code generator for Android.
 
+[AwesomeQRCode in Kotlin](https://github.com/SumiMakito/AwesomeQRCode-Kotlin)
+
 [切换至中文（简体）版本？](README-zh_CN.md)
 
 <img alt="Special, thus awesome." src="art/banner.png" style="max-width: 600px;">

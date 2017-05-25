@@ -5,6 +5,8 @@
 
 一个优雅的<del>（不起眼的）</del> QR 二维码生成器
 
+[Kotlin 编写的 AwesomeQRCode](https://github.com/SumiMakito/AwesomeQRCode-Kotlin)
+
 [Swithc to English Version?](README.md)
 
 <img alt="Special, thus awesome." src="art/banner.png" style="max-width: 600px;">
