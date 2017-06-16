@@ -280,10 +280,11 @@ public class MainActivity extends AppCompatActivity {
                 .renderAsync(new AwesomeQRCode.Callback() {
                     @Override
                     public void onRendered(AwesomeQRCode.Renderer renderer, final Bitmap bitmap) {
+                        qrBitmap = bitmap;
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-                                qrCodeImageView.setImageBitmap(bitmap);
+                                qrCodeImageView.setImageBitmap(qrBitmap);
                                 configViewContainer.setVisibility(View.GONE);
                                 resultViewContainer.setVisibility(View.VISIBLE);
                                 if (progressDialog != null) progressDialog.dismiss();
