@@ -1,21 +1,19 @@
-# AwesomeQRCode
-[![](https://jitpack.io/v/SumiMakito/AwesomeQRCode.svg)](https://jitpack.io/#SumiMakito/AwesomeQRCode)
-[![license](https://img.shields.io/github/license/SumiMakito/AwesomeQRCode.svg)](https://github.com/SumiMakito/AwesomeQRCode/blob/master/LICENSE)
-[![release](https://img.shields.io/github/release/SumiMakito/AwesomeQRCode.svg)](https://github.com/SumiMakito/AwesomeQRCode/releases/latest)
-
-An awesome<del>(simple)</del> QR code generator for Android.
-
-[AwesomeQRCode in Kotlin](https://github.com/SumiMakito/AwesomeQRCode-Kotlin)
-
-[切换至中文（简体）版本？](README-zh_CN.md)
-
 <img alt="Special, thus awesome." src="art/banner.png" style="max-width: 600px;">
 
-### Yay! Demo Available! 
+[![](https://jitpack.io/v/SumiMakito/AwesomeQRCode.svg)](https://jitpack.io/#SumiMakito/AwesomeQRCode)
+[![release](https://img.shields.io/github/release/SumiMakito/AwesomeQRCode.svg)](https://github.com/SumiMakito/AwesomeQRCode/releases/latest)
+[![license](https://img.shields.io/github/license/SumiMakito/AwesomeQRCode.svg)](https://github.com/SumiMakito/AwesomeQRCode/blob/master/LICENSE)
+![](https://img.shields.io/badge/made%20with-%3C3-orange.svg)
+
+AwesomeQRCode - An awesome<del>(simple)</del> QR code generator for Android.
+
+> [切换至中文（简体）版本？](README-zh_CN.md)
+
+## Yay! Demo Available!
 
 <a href="https://play.google.com/store/apps/details?id=com.github.sumimakito.awesomeqrsample" target="_blank"><img src="art/play_store_badge.png" alt="Google Play Store" width="200"></a>
 
-### Examples
+## Examples
 
 > Try to scan these QR codes below with your smart phone.
 
@@ -23,14 +21,14 @@ Example 1|Example 2|Example 3
 ------------ | ------------- | -------------
 <img src="art/awesome-qr-1.png" width="400"> | <img src="art/awesome-qr-2.png" width="400"> | <img src="art/awesome-qr-3.png" width="400">
 
-
 Solid dots instead of blocks|Binarized|With logo at the center
 ------------ | ------------- | -------------
 <img src="art/awesome-qr-4.png" width="400"> | <img src="art/awesome-qr-5.png" width="400"> | <img src="art/awesome-qr-6.png" width="400">
 
-### Add dependency into your project
+## Installation
 
-Add below lines in build.gradle of your project:
+To add dependency into your project, Add below lines in build.gradle of your project:
+
 ```
 allprojects {
 	repositories {
@@ -41,18 +39,18 @@ allprojects {
 ```
 
 Then, add below lines in build.gradle of your app module:
+
 ```
 dependencies {
         compile 'com.github.SumiMakito:AwesomeQRCode:latest'
 }
 ```
 
-### Quick start
+## Quick Start
 
+### 1. "I just wanna get a Bitmap"
 
-#### "I just wanna get a Bitmap":
-
-> In this case, QR code will be generated synchronously. Thus it means you may take a risk blocking the UI thread, which would lead to Application Not Responding (ANR). I strongly recommend you to use it in a non-UI thread.
+In this case, QR code will be generated synchronously. Thus it means you may take a risk blocking the UI thread, which would lead to Application Not Responding (ANR). I strongly recommend you to use it in a non-UI thread.
 
 ```java
 new Thread() {
@@ -66,7 +64,7 @@ new Thread() {
   }.start();
 ```
 
-#### Generate a QR code asynchronously and show the QR code in an ImageView:
+### 2. Generate a QR code asynchronously and show the QR code in an ImageView
 
 ```java
 new AwesomeQRCode.Renderer()
@@ -91,7 +89,7 @@ new AwesomeQRCode.Renderer()
  });
 ```
 
-### Parameters
+## Parameters
 
 Parameter | Type | Explanation | Default Value | Misc.
 :----:|:------:|----|:--:|:--:
@@ -112,8 +110,7 @@ logoMargin | int-px | White margin that appears around the logo image. Leave 0 t
 logoCornerRadius | int-px | Radius of the logo's corners. Leave 0 to disable. | 8 | 
 logoScale | float | Value used to scale the logo image. Larger value may result in decode failure. | 0.2f | (0, 1.0f)
 
-
-### Changelog
+## Changelog
 
 #### Version 1.0.6
 - Fixed a "divide by zero" error mentioned in [#20](https://github.com/SumiMakito/AwesomeQRCode/issues/20).
@@ -121,26 +118,31 @@ logoScale | float | Value used to scale the logo image. Larger value may result 
 #### Version 1.0.5
 - The way to use AwesomeQRCode is more elegant.
 
-#### Version 1.0.4
+### Version 1.0.4
+
 - New feature: Embedding a logo image in the QR code.
 - Sample/Demo application updated.
 
-#### Version 1.0.3
+### Version 1.0.3
+
 - Added CHARACTER_SET => UTF-8 to QR code's hints before encoding.
 - Fixed an encoding issue mentioned in [#7](https://github.com/SumiMakito/AwesomeQRCode/issues/7).
 
-#### Version 1.0.2
+### Version 1.0.2
+
 - Added an optional parameter which enables the data dots to appear as filled circles.
 
-#### Version 1.0.1
+### Version 1.0.1
+
 - Now background images can be binarized as you like.
 
-#### Version 1.0.0
+### Version 1.0.0
+
 - Initial release.
 
-### Alternatives
+## Alternatives
 
-#### EFQRCode written in Swift
+### EFQRCode written in Swift
 
 EFQRCode is a tool to generate QRCode image or recognize QRCode from image, in Swift.
 
@@ -148,33 +150,25 @@ AwesomeQRCode is inspired by [EFQRCode by EyreFree](https://github.com/EyreFree/
 
 If your application is in need of generating pretty QR codes in Swift, take a look at EFQRCode. It should help.
 
-#### Awesome-qr.js written in JavaScript
+### Awesome-qr.js written in JavaScript
 
 Redirect to [Awesome-qr.js](https://github.com/SumiMakito/Awesome-qr.js)
 
-### Would you like to buy me a cup of cappuccino?
+### AwesomeQRCode-Kotlin written in Kotlin
+
+Redirect to [AwesomeQRCode-Kotlin](https://github.com/SumiMakito/AwesomeQRCode-Kotlin)
+
+## Donation
+
+Would you like to buy me a cup of cappuccino?
+
 PayPal | Alipay
 ----|----
 [PayPal](https://www.paypal.me/makito) | [Alipay](https://qr.alipay.com/a6x02021re1jk4ftcymlw79)
 
-### Copyright &amp; License
+## Copyright &amp; License
 
-Copyright &copy; 2017 Sumi Makito
+<img alt="Apache-2.0 license" src="https://lucene.apache.org/images/mantle-power.png" width="128">
 
-Licensed under Apache License 2.0 License.
-
-```
-Copyright 2017 Sumi Makito
-
-Licensed under the Apache License, Version 2.0 (the "License");
-you may not use this file except in compliance with the License.
-You may obtain a copy of the License at
-
-    http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing, software
-distributed under the License is distributed on an "AS IS" BASIS,
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-See the License for the specific language governing permissions and
-limitations under the License.
-```
+AwesomeQRCode is available under the Apache-2.0 license. See the LICENSE file for more info.   
+Copyright &copy; 2017 Sumi Makito.
