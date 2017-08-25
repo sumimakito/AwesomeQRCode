@@ -43,7 +43,7 @@ allprojects {
 Then, add below lines in build.gradle of your app module:
 ```
 dependencies {
-        compile 'com.github.SumiMakito:AwesomeQRCode:1.0.5'
+        compile 'com.github.SumiMakito:AwesomeQRCode:latest'
 }
 ```
 
@@ -114,6 +114,9 @@ logoScale | float | Value used to scale the logo image. Larger value may result 
 
 
 ### Changelog
+
+#### Version 1.0.6
+- Fixed a "divide by zero" error mentioned in [#20](https://github.com/SumiMakito/AwesomeQRCode/issues/20).
 
 #### Version 1.0.5
 - The way to use AwesomeQRCode is more elegant.

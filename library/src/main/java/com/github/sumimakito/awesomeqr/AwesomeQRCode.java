@@ -374,10 +374,16 @@ public class AwesomeQRCode {
             }
         }
         newBitmap.recycle();
-        red = Math.max(0, Math.min(0xFF, red / c));
-        green = Math.max(0, Math.min(0xFF, green / c));
-        blue = Math.max(0, Math.min(0xFF, blue / c));
-        return (0xFF << 24) | (red << 16) | (green << 8) | blue;
+        if(c==0){
+            // got a bitmap with no pixels in it
+            // avoid the "divide by zero" error
+            return 0xFF000000;
+        }else {
+            red = Math.max(0, Math.min(0xFF, red / c));
+            green = Math.max(0, Math.min(0xFF, green / c));
+            blue = Math.max(0, Math.min(0xFF, blue / c));
+            return (0xFF << 24) | (red << 16) | (green << 8) | blue;
+        }
     }
 
     private static void binarize(Bitmap bitmap, int threshold) {
