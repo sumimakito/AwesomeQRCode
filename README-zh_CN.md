@@ -45,7 +45,7 @@ allprojects {
 在应用模块层级下的 build.gradle 中补充以下内容:
 ```
 dependencies {
-        compile 'com.github.SumiMakito:AwesomeQRCode:1.0.5'
+        compile 'com.github.SumiMakito:AwesomeQRCode:1.0.6'
 }
 ```
 
@@ -119,6 +119,9 @@ logoScale | float | 用于计算 Logo 大小, 过大将覆盖过多数据点而�
 
 
 ### 更新日志
+
+#### 1.0.6 版本
+- 修复 divide by zero 错误
 
 #### 1.0.5 版本
 - 使用 AwesomeQRCode 的方式变的更优雅
