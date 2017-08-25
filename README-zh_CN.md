@@ -44,7 +44,7 @@ allprojects {
 
 ```
 dependencies {
-        compile 'com.github.SumiMakito:AwesomeQRCode:1.0.5'
+        compile 'com.github.SumiMakito:AwesomeQRCode:1.0.6'
 }
 ```
 
@@ -114,10 +114,12 @@ logoMargin | int-px | Logo 周围的空白边框, 设为 0 以禁用 | 10 |
 logoCornerRadius | int-px | Logo 及其边框的圆角半径, 设为 0 以禁用 | 8 | 
 logoScale | float | 用于计算 Logo 大小, 过大将覆盖过多数据点而导致解码失败 | 0.2f | (0, 1.0f)
 
-## 更新日志
+### 更新日志
 
-### 1.0.5 版本
+#### 1.0.6 版本
+- 修复 divide by zero 错误
 
+#### 1.0.5 版本
 - 使用 AwesomeQRCode 的方式变的更优雅
 
 ### 1.0.4 版本

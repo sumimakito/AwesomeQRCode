@@ -42,7 +42,7 @@ Then, add below lines in build.gradle of your app module:
 
 ```
 dependencies {
-        compile 'com.github.SumiMakito:AwesomeQRCode:latest'
+        compile 'com.github.SumiMakito:AwesomeQRCode:1.0.6'
 }
 ```
 
