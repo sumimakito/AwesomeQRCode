@@ -1,38 +1,36 @@
-# AwesomeQRCode
-[![](https://jitpack.io/v/SumiMakito/AwesomeQRCode.svg)](https://jitpack.io/#SumiMakito/AwesomeQRCode)
-[![license](https://img.shields.io/github/license/SumiMakito/AwesomeQRCode.svg)](https://github.com/SumiMakito/AwesomeQRCode/blob/master/LICENSE)
-[![release](https://img.shields.io/github/release/SumiMakito/AwesomeQRCode.svg)](https://github.com/SumiMakito/AwesomeQRCode/releases/latest)
-
-一个优雅的<del>（不起眼的）</del> QR 二维码生成器
-
-[Kotlin 编写的 AwesomeQRCode](https://github.com/SumiMakito/AwesomeQRCode-Kotlin)
-
-[Swithc to English Version?](README.md)
-
 <img alt="Special, thus awesome." src="art/banner.png" style="max-width: 600px;">
 
-### 好耶! 演示应用!
+[![](https://jitpack.io/v/SumiMakito/AwesomeQRCode.svg)](https://jitpack.io/#SumiMakito/AwesomeQRCode)
+[![release](https://img.shields.io/github/release/SumiMakito/AwesomeQRCode.svg)](https://github.com/SumiMakito/AwesomeQRCode/releases/latest)
+[![license](https://img.shields.io/github/license/SumiMakito/AwesomeQRCode.svg)](https://github.com/SumiMakito/AwesomeQRCode/blob/master/LICENSE)
+![](https://img.shields.io/badge/made%20with-%3C3-orange.svg)
+
+AwesomeQRCode - 一个优雅的<del>（不起眼的）</del> QR 二维码生成器
+
+> [Swithc to English Version?](README.md)
+
+## 好耶！ 演示应用！
 
 <a href="https://play.google.com/store/apps/details?id=com.github.sumimakito.awesomeqrsample" target="_blank"><img src="art/play_store_badge.png" alt="Google Play Store" width="200"></a>
 
-### 样例
+## 样例
 
-> 拿起你的手机扫描下面的二维码试试吧!
+> 拿起你的手机扫描下面的二维码试试吧！
 
 样例 1 | 样例 2 | 样例 3
 ------------ | ------------- | -------------
 <img src="art/awesome-qr-1.png" width="400"> | <img src="art/awesome-qr-2.png" width="400"> | <img src="art/awesome-qr-3.png" width="400">
 
-
 使用圆点做数据点 | 二值化处理 | 带有 Logo
 ------------ | ------------- | -------------
 <img src="art/awesome-qr-4.png" width="400"> | <img src="art/awesome-qr-5.png" width="400"> | <img src="art/awesome-qr-6.png" width="400">
 
-### 添加依赖项
+## 引用
 
 > <del>万事开头难, 补全就好啦!</del>
 
-在项目根目录下的 build.gradle 中补充以下内容:
+在项目根目录下的 build.gradle 中补充以下内容，以添加依赖项：
+
 ```
 allprojects {
 	repositories {
@@ -42,21 +40,21 @@ allprojects {
 }
 ```
 
-在应用模块层级下的 build.gradle 中补充以下内容:
+在应用模块层级下的 build.gradle 中补充以下内容：
+
 ```
 dependencies {
         compile 'com.github.SumiMakito:AwesomeQRCode:1.0.6'
 }
 ```
 
-### 快速上手
+## 快速上手
 
-#### "人家只想要 Bitmap 嘛":
+### 1. "人家只想要 Bitmap 嘛"
 
 > <del>原来乃只想要 Bitmap 撒... 满足你!!</del>
 
-
-> 这种情况下，二维码将同步（synchronously）生成，这有可能阻塞 UI 线程，引起应用无响应（ANR）问题。因此建议在非 UI 线程中使用。
+这种情况下，二维码将同步（synchronously）生成，这有可能阻塞 UI 线程，引起应用无响应（ANR）问题。因此建议在非 UI 线程中使用。
 
 ```java
 new Thread() {
@@ -70,7 +68,7 @@ new Thread() {
   }.start();
 ```
 
-#### 异步生成二维码并在 ImageView 中显示:
+### 2. 异步生成二维码并在 ImageView 中显示
 
 ```java
 new AwesomeQRCode.Renderer()
@@ -95,7 +93,7 @@ new AwesomeQRCode.Renderer()
  });
 ```
 
-### 参数说明
+## 参数说明
 
 参数名 | 类型 | 说明 | 默认值 | 备注
 :----:|:------:|----|:--:|:-----:
@@ -116,8 +114,6 @@ logoMargin | int-px | Logo 周围的空白边框, 设为 0 以禁用 | 10 |
 logoCornerRadius | int-px | Logo 及其边框的圆角半径, 设为 0 以禁用 | 8 | 
 logoScale | float | 用于计算 Logo 大小, 过大将覆盖过多数据点而导致解码失败 | 0.2f | (0, 1.0f)
 
-
-
 ### 更新日志
 
 #### 1.0.6 版本
@@ -126,57 +122,53 @@ logoScale | float | 用于计算 Logo 大小, 过大将覆盖过多数据点而�
 #### 1.0.5 版本
 - 使用 AwesomeQRCode 的方式变的更优雅
 
-#### 1.0.4 版本
+### 1.0.4 版本
+
 - 可以在二维码中选择嵌入 Logo
 - 演示应用更新
 
-#### 1.0.3 版本
+### 1.0.3 版本
+
 - 在二维码中的 Hints 中加入 CHARACTER_SET => UTF-8 
 - 修复 [#7](https://github.com/SumiMakito/AwesomeQRCode/issues/7) 中提到的编码问题
 
-#### 1.0.2 版本
+### 1.0.2 版本
+
 - 加入使用圆点绘制二维码数据点的选项
 
-#### 1.0.1 版本
+### 1.0.1 版本
+
 - 加入背景二值化的支持
 
-#### 1.0.0 版本
+### 1.0.0 版本
+
 - 初次发布
 
-### 相关项目
+## 相关项目
 
-#### Swift 下的 EFQRCode 
+### Swift 下的 EFQRCode 
 
 AwesomeQRCode 受 [由 EyreFree 创造的 EFQRCode](https://github.com/EyreFree/EFQRCode) 所启发而生，它是一个轻量级的、用来生成和识别二维码的纯 Swift 库，可根据输入的水印图和图标产生艺术二维码，基于 CoreImage 进行开发。受 qrcode 启发。EFQRCode 为你提供了一种更好的在你的 App 中操作二维码的方式。
 
-
-#### 可在网页使用的 JavaScript 版: Awesome-qr.js
+### 可在网页使用的 JavaScript 版: Awesome-qr.js
 
 详情请至 [Awesome-qr.js](https://github.com/SumiMakito/Awesome-qr.js)
 
-### 可以请我喝一杯卡布奇诺吗？
+### 强大的 Kotlin <del>（复刻）</del> 版: AwesomeQRCode-Kotlin
+
+详情请至 [AwesomeQRCode-Kotlin](https://github.com/SumiMakito/AwesomeQRCode-Kotlin)
+
+## 捐赠
+
+可以请我喝一杯卡布奇诺吗？
+
 PayPal | 支付宝
 ----|----
 [PayPal](https://www.paypal.me/makito) | [支付宝](https://qr.alipay.com/a6x02021re1jk4ftcymlw79)
 
-### 版权信息与授权协议
+## 版权信息与授权协议
 
-Copyright &copy; 2017 Sumi Makito
+<img alt="Apache-2.0 license" src="https://lucene.apache.org/images/mantle-power.png" width="128">
 
-Licensed under Apache License 2.0 License.
-
-```
-Copyright 2017 Sumi Makito
-
-Licensed under the Apache License, Version 2.0 (the "License");
-you may not use this file except in compliance with the License.
-You may obtain a copy of the License at
-
-    http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing, software
-distributed under the License is distributed on an "AS IS" BASIS,
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-See the License for the specific language governing permissions and
-limitations under the License.
-```
+AwesomeQRCode is available under the Apache-2.0 license. See the LICENSE file for more info.   
+Copyright &copy; 2017 Sumi Makito.
