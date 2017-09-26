@@ -14,8 +14,15 @@
         <activity android:name="com.github.sumimakito.awesomeqrsample.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
+                <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.LAUNCHER" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data android:scheme="https"
+                    android:host="www.bitcat.cc"
+                    android:pathPrefix="/awesomeqr" />
+
             </intent-filter>
         </activity>
         <provider
