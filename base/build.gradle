@@ -1,15 +1,15 @@
 apply plugin: 'com.android.feature'
 
 android {
-    baseFeature = true
-    compileSdkVersion 26
-    buildToolsVersion "26.0.1"
+    baseFeature true
+    compileSdkVersion project.compileSdkVersion
+    buildToolsVersion project.buildToolsVersion
+
     defaultConfig {
-        minSdkVersion 19
-        targetSdkVersion 26
-        versionCode 11
-        versionName "1.10"
-        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        minSdkVersion project.minSdkVersion
+        targetSdkVersion project.targetSdkVersion
+        versionCode project.versionCode
+        versionName project.versionName
     }
     buildTypes {
         release {
@@ -23,6 +23,7 @@ dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
     compile 'com.android.support:appcompat-v7:26.1.0'
     compile 'com.android.support.constraint:constraint-layout:1.1.0-beta1'
-    testCompile 'junit:junit:4.12'
     compile project(':library')
+
+    application project(":apk")
 }

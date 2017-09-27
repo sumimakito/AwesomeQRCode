@@ -1,1 +1,1 @@
-include ':app', ':library', ':awesomeqrapk', ':instantapp'
+include ':base', ':library', ':apk', ':instant-app'

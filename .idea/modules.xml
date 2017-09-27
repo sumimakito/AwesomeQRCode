@@ -3,9 +3,9 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/AwesomeQR.iml" filepath="$PROJECT_DIR$/AwesomeQR.iml" />
-      <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
-      <module fileurl="file://$PROJECT_DIR$/awesomeqrapk/awesomeqrapk.iml" filepath="$PROJECT_DIR$/awesomeqrapk/awesomeqrapk.iml" />
-      <module fileurl="file://$PROJECT_DIR$/instantapp/instantapp.iml" filepath="$PROJECT_DIR$/instantapp/instantapp.iml" />
+      <module fileurl="file://$PROJECT_DIR$/apk/awesomeqrapk.iml" filepath="$PROJECT_DIR$/apk/awesomeqrapk.iml" />
+      <module fileurl="file://$PROJECT_DIR$/base/app.iml" filepath="$PROJECT_DIR$/base/app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/instant-app/instantapp.iml" filepath="$PROJECT_DIR$/instant-app/instantapp.iml" />
       <module fileurl="file://$PROJECT_DIR$/library/library.iml" filepath="$PROJECT_DIR$/library/library.iml" />
     </modules>
   </component>

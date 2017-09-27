@@ -327,8 +327,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public static File getPublicContainer() {
-        File musicContainer = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
-        File aqr = new File(musicContainer, "AwesomeQR");
+        File picContainer = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
+        File aqr = new File(picContainer, "AwesomeQR");
         if (aqr.exists() && !aqr.isDirectory()) {
             aqr.delete();
         }

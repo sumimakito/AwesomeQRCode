@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="com.github.sumimakito.awesomeqrsample">
 
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
@@ -14,17 +15,28 @@
         <activity android:name="com.github.sumimakito.awesomeqrsample.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-                <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+            <intent-filter
+                android:autoVerify="true"
+                tools:targetApi="m">
+                <action android:name="android.intent.action.VIEW" />
+
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
 
-                <data android:scheme="https"
-                    android:host="www.bitcat.cc"
-                    android:pathPrefix="/awesomeqr" />
-
+                <data android:scheme="http" />
+                <data android:scheme="https" />
+                <data android:host="www.bitcat.cc" />
+                <data android:pathPrefix="/asmqr" />
+                <data android:pathPrefix="/asmqr/" />
             </intent-filter>
+
+            <meta-data
+                android:name="default-url"
+                android:value="https://www.bitcat.cc/asmqr/index.html" />
         </activity>
+
         <provider
             android:name="android.support.v4.content.FileProvider"
             android:authorities="com.github.sumimakito.awesomeqrsample.FileProvider"
@@ -34,6 +46,10 @@
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/file_provider_paths" />
         </provider>
-    </application>
+
+        <meta-data
+            android:name="asset_statements"
+            android:resource="@string/asset_statements" />
+</application>
 
 </manifest>

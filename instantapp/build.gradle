@@ -1,9 +1,0 @@
-apply plugin: 'com.android.instantapp'
-
-android {
-    buildToolsVersion "26.0.1"
-}
-
-dependencies {
-    implementation project(':app')
-}

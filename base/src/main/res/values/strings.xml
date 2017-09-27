@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">AwesomeQR</string>
+    <string name="asset_statements">[{ \"include\": \"https://www.bitcat.cc/.well-known/assetlinks.json\" }]</string>
+</resources>
