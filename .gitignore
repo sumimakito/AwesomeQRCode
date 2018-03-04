@@ -8,3 +8,7 @@
 /captures
 .externalNativeBuild
 *.apk
+/base
+/apk
+/instant-app
+/release

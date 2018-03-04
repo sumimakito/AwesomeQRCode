@@ -17,6 +17,8 @@ import com.google.zxing.qrcode.encoder.ByteMatrix;
 import com.google.zxing.qrcode.encoder.Encoder;
 import com.google.zxing.qrcode.encoder.QRCode;
 
+import java.io.File;
+import java.io.FileOutputStream;
 import java.util.Hashtable;
 
 public class AwesomeQRCode {
@@ -66,7 +68,7 @@ public class AwesomeQRCode {
      * @return Bitmap of QR code
      * @throws IllegalArgumentException Refer to the messages below.
      */
-    private static Bitmap create(String contents, int size, int margin, float dataDotScale, int colorDark,
+    private static Bitmap create(String contents, int size, int margin, ErrorCorrectionLevel errorCorrectionLevel, float dataDotScale, int colorDark,
                                  int colorLight, Bitmap backgroundImage, boolean whiteMargin, boolean autoColor,
                                  boolean binarize, int binarizeThreshold, boolean roundedDataDots,
                                  Bitmap logoImage, int logoMargin, int logoCornerRadius, float logoScale) throws IllegalArgumentException {
@@ -82,7 +84,10 @@ public class AwesomeQRCode {
         if (size - 2 * margin <= 0) {
             throw new IllegalArgumentException("Error: there is no space left for the QRCode. (size - 2 * margin <= 0)");
         }
-        ByteMatrix byteMatrix = getBitMatrix(contents);
+        ByteMatrix byteMatrix = getBitMatrix(contents, errorCorrectionLevel);
+        if (byteMatrix == null) {
+            throw new NullPointerException("Error: input content led to a null ByteMatrix.");
+        }
         if (size - 2 * margin < byteMatrix.getWidth()) {
             throw new IllegalArgumentException("Error: there is no space left for the QRCode. (size - 2 * margin < " + byteMatrix.getWidth() + ")");
         }
@@ -145,7 +150,6 @@ public class AwesomeQRCode {
         Canvas canvas = new Canvas(renderedBitmap);
         canvas.drawColor(Color.WHITE);
         canvas.drawBitmap(backgroundImageScaled, whiteMargin ? margin : 0, whiteMargin ? margin : 0, paint);
-
 
         for (int row = 0; row < byteMatrix.getHeight(); row++) {
             for (int col = 0; col < byteMatrix.getWidth(); col++) {
@@ -251,9 +255,9 @@ public class AwesomeQRCode {
         return renderedBitmap;
     }
 
-    private static ByteMatrix getBitMatrix(String contents) {
+    private static ByteMatrix getBitMatrix(String contents, ErrorCorrectionLevel errorCorrectionLevel) {
         try {
-            QRCode qrCode = getProtoQRCode(contents, ErrorCorrectionLevel.H);
+            QRCode qrCode = getProtoQRCode(contents, errorCorrectionLevel);
             int agnCenter[] = qrCode.getVersion().getAlignmentPatternCenters();
             ByteMatrix byteMatrix = qrCode.getMatrix();
             int matSize = byteMatrix.getWidth();
@@ -374,11 +378,12 @@ public class AwesomeQRCode {
             }
         }
         newBitmap.recycle();
-        if(c==0){
+        if (c == 0) {
             // got a bitmap with no pixels in it
             // avoid the "divide by zero" error
+            // but WHO DARES GIMME AN EMPTY BITMAP?
             return 0xFF000000;
-        }else {
+        } else {
             red = Math.max(0, Math.min(0xFF, red / c));
             green = Math.max(0, Math.min(0xFF, green / c));
             blue = Math.max(0, Math.min(0xFF, blue / c));
@@ -417,10 +422,14 @@ public class AwesomeQRCode {
         private int logoMargin;
         private int logoCornerRadius;
         private float logoScale;
+        private File backgroundGif;
+        private File outputFile;
+        private ErrorCorrectionLevel errorCorrectionLevel;
 
         public Renderer() {
             size = DEFAULT_SIZE;
             margin = DEFAULT_MARGIN;
+            errorCorrectionLevel = ErrorCorrectionLevel.M;
             dataDotScale = DEFAULT_DTA_DOT_SCALE;
             colorDark = Color.BLACK;
             colorLight = Color.WHITE;
@@ -442,6 +451,21 @@ public class AwesomeQRCode {
 
         public Renderer background(Bitmap backgroundImage) {
             this.backgroundImage = backgroundImage;
+            return this;
+        }
+
+        public Renderer backgroundGif(File gifFile) {
+            this.backgroundGif = gifFile;
+            return this;
+        }
+
+        public Renderer saveTo(File outputFile) {
+            this.outputFile = outputFile;
+            return this;
+        }
+
+        public Renderer errorCorrectionLevel(ErrorCorrectionLevel errorCorrectionLevel) {
+            this.errorCorrectionLevel = errorCorrectionLevel;
             return this;
         }
 
@@ -515,31 +539,63 @@ public class AwesomeQRCode {
             return this;
         }
 
-        public Bitmap render() throws IllegalArgumentException {
-            return create(
-                    contents, size, margin, dataDotScale, colorDark, colorLight,
-                    backgroundImage, whiteMargin, autoColor, binarize, binarizeThreshold,
-                    roundedDataDots, logoImage, logoMargin, logoCornerRadius, logoScale
-            );
+        /**
+         * The general render function.
+         *
+         * @return a Bitmap if success when under still background image mode
+         * otherwise will return null if success
+         * @throws Exception ONLY thrown when an error occurred
+         */
+        public Bitmap render() throws Exception {
+            if (backgroundGif != null) {
+                if (outputFile == null) {
+                    throw new Exception("Output file has not yet been set. It is required under GIF background mode.");
+                }
+                GifPipeline gifPipeline = new GifPipeline();
+                if (!gifPipeline.init(backgroundGif)) {
+                    throw new Exception("GifPipeline failed to init: " + gifPipeline.getErrorInfo());
+                }
+                gifPipeline.setOutputFile(outputFile);
+                Bitmap frame;
+                while ((frame = gifPipeline.nextFrame()) != null) {
+                    gifPipeline.pushRendered(create(
+                            contents, size, margin, errorCorrectionLevel, dataDotScale, colorDark, colorLight,
+                            frame, whiteMargin, autoColor, binarize, binarizeThreshold,
+                            roundedDataDots, logoImage, logoMargin, logoCornerRadius, logoScale
+                    ));
+                }
+                if (gifPipeline.getErrorInfo() != null) {
+                    throw new Exception("GifPipeline failed to render frames: " + gifPipeline.getErrorInfo());
+                }
+                if (!gifPipeline.postRender()) {
+                    throw new Exception("GifPipeline failed to do post render works: " + gifPipeline.getErrorInfo());
+                }
+                return null;
+            } else {
+                Bitmap rendered = create(
+                        contents, size, margin, errorCorrectionLevel, dataDotScale, colorDark, colorLight,
+                        backgroundImage, whiteMargin, autoColor, binarize, binarizeThreshold,
+                        roundedDataDots, logoImage, logoMargin, logoCornerRadius, logoScale
+                );
+                if (outputFile != null) {
+                    FileOutputStream fos = new FileOutputStream(outputFile);
+                    rendered.compress(Bitmap.CompressFormat.PNG, 100, fos);
+                    fos.flush();
+                    fos.close();
+                }
+                return rendered;
+            }
         }
 
-        public void renderAsync(final Callback callback) throws IllegalArgumentException {
-            new Thread() {
-                @Override
-                public void run() {
-                    super.run();
-                    try {
-                        Bitmap bitmap = create(
-                                contents, size, margin, dataDotScale, colorDark, colorLight,
-                                backgroundImage, whiteMargin, autoColor, binarize, binarizeThreshold,
-                                roundedDataDots, logoImage, logoMargin, logoCornerRadius, logoScale
-                        );
-                        if (callback != null) callback.onRendered(Renderer.this, bitmap);
-                    } catch (Exception e) {
-                        if (callback != null) callback.onError(Renderer.this, e);
-                    }
+        public void renderAsync(final Callback callback) {
+            new Thread(() -> {
+                try {
+                    Bitmap bitmap = render();
+                    if (callback != null) callback.onRendered(Renderer.this, bitmap);
+                } catch (Exception e) {
+                    if (callback != null) callback.onError(Renderer.this, e);
                 }
-            }.start();
+            }).start();
         }
     }
 
