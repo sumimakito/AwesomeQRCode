@@ -156,7 +156,9 @@ AwesomeQRCode 受 [由 EyreFree 创造的 EFQRCode](https://github.com/EyreFree/
 
 详情请至 [Awesome-qr.js](https://github.com/SumiMakito/Awesome-qr.js)
 
-### 强大的 Kotlin <del>（复刻）</del> 版: AwesomeQRCode-Kotlin
+### <del>强大的 Kotlin （复刻）版: AwesomeQRCode-Kotlin</del> 
+
+更新较慢，不推荐使用。
 
 详情请至 [AwesomeQRCode-Kotlin](https://github.com/SumiMakito/AwesomeQRCode-Kotlin)
 

@@ -154,7 +154,9 @@ If your application is in need of generating pretty QR codes in Swift, take a lo
 
 Redirect to [Awesome-qr.js](https://github.com/SumiMakito/Awesome-qr.js)
 
-### AwesomeQRCode-Kotlin written in Kotlin
+### <del>AwesomeQRCode-Kotlin written in Kotlin</del>
+
+Deprecated. Not recommended.
 
 Redirect to [AwesomeQRCode-Kotlin](https://github.com/SumiMakito/AwesomeQRCode-Kotlin)
 
