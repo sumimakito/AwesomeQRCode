@@ -173,7 +173,7 @@ PayPal | 支付宝
 <img alt="Apache-2.0 license" src="https://lucene.apache.org/images/mantle-power.png" width="128">
 
 AwesomeQRCode is available under the Apache-2.0 license. See the LICENSE file for more info.   
-Copyright &copy; 2017 Sumi Makito.
+Copyright &copy; 2017-2018 Makito.
 
 ## 排他性发行协议
 
