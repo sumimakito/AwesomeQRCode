@@ -93,28 +93,135 @@ new AwesomeQRCode.Renderer()
  });
 ```
 
-## 参数说明
+## 渲染流程
 
-参数名 | 类型 | 说明 | 默认值 | 备注
-:----:|:------:|----|:--:|:-----:
-contents | String | 欲编码的内容 | null | 必需
-size | int-px | 尺寸, 长宽一致, 包含外边距 | 800 | 必需
-margin | int-px | 二维码图像的外边距 | 20 | 必需 
-dataDotScale | float | 数据点缩小比例 | 0.3f | (0, 1.0f) 
-colorDark | int-color | 非空白区域的颜色 | Color.BLACK | 
-colorLight | int-color | 空白区域的颜色 | Color.WHITE |
-background | Bitmap | 欲嵌入的背景图, 设为 null 以禁用 | null | 
-whiteMargin | int-px | 若设为 true, 背景图外将绘制白色边框 | true | 
-autoColor | boolean | 若为 true, 背景图的主要颜色将作为实点的颜色, 即 colorDark | true | 
-binarize | boolean | 若为 true, 图像将被二值化处理, 未指定阈值则使用默认值 | fasle | 
-binarizeThreshold | int | 二值化处理的阈值 | 128 | (0, 255)
-roundedDataDots | boolean | 若为 true, 数据点将以圆点绘制 | false | 
-logo | Bitmap | 欲嵌入至二维码中心的 Logo, 设为 null 以禁用 | null | 
-logoMargin | int-px | Logo 周围的空白边框, 设为 0 以禁用 | 10 | 
-logoCornerRadius | int-px | Logo 及其边框的圆角半径, 设为 0 以禁用 | 8 | 
-logoScale | float | 用于计算 Logo 大小, 过大将覆盖过多数据点而导致解码失败 | 0.2f | (0, 1.0f)
+```
+Bitmap bitmap = new AwesomeQRCode.Renderer() ...
+```
+
+### 基本
+
+#### .contents(String)
+
+*必需*<br>
+欲编码的内容。<br>
+默认为 *null*。
+
+#### .size(int)
+
+*必需*<br>
+尺寸，长宽一致，包含外边距。<br>
+单位是 *px*。
+默认为 *800*。
+
+#### .margin(int)
+
+二维码图像的外边距。<br>
+单位是 *px*。<br>
+默认为 *20*。
+
+#### .dataDotScale(float)
+
+数据点缩小比例。<br>
+默认为 *0.3f*。
+
+#### .roundedDataDots(boolean)
+
+若为 true，数据区域将以圆点绘制。<br>
+默认为 *false*。
+
+#### .whiteMargin(boolean)
+
+若设为 true，背景图外将绘制白色边框。<br>
+默认为 *true*。
+
+### 后处理
+
+#### .binarize(boolean)
+
+若为 true，图像将被二值化处理。<br>
+默认为 *false*。
+
+#### .binarizeThreshold(int)
+
+二值化处理的阈值。<br>
+默认为 *128*。
+
+### 颜色
+
+#### .autoColor(boolean)
+
+若为 true，背景图（或 GIF 的每一帧）中的主要颜色将作为非空白区域的颜色。<br>
+默认为 *true*。
+
+#### .colorDark(int)
+
+非空白区域的颜色。<br>
+默认为 *Color.BLACK*。
+
+#### .colorLight(int)
+
+空白区域的颜色。<br>
+默认为 *Color.WHITE*。
+
+### Background
+
+#### .background(Bitmap)
+
+欲嵌入的背景图，设为 null 以禁用。<br>
+默认为 *null*。
+
+#### .backgroundGif(File)
+
+*必须是 GIF 类型图片，否则将出错。*<br>
+欲嵌入的 GIF 背景图，设为 null 以禁用。<br>
+默认为 *null*。
+
+#### .backgroundGifCropRect(RectF)
+
+裁切 GIF 所使用的矩形区域。<br>
+默认为 *null*。
+
+#### .saveTo(File)
+
+*设置 backgroundGif 时必须指定。*<br>
+生成 GIF QR 二维码的输出文件。<br>
+默认为 *null*。
+
+### Logo
+
+#### .logo(Bitmap)
+
+欲嵌入至二维码中心的 Logo，设为 null 以禁用。<br>
+默认为 *null*。
+
+#### .logoMargin(int)
+
+Logo 周围的空白边框，设为 0 以禁用。<br>
+单位是 *px*。<br>
+默认为 *10*。
+
+#### .logoCornerRadius(int)
+
+Logo 及其边框的圆角半径，设为 0 以禁用。<br>
+单位是 *px*。<br>
+默认为 *8*。
+
+#### .logoScale(float)
+
+用于计算 Logo 大小的比例，过大可能会导致解码问题。<br>
+默认为 *0.2f*。
+
+```
+... .render(); // 得到 Bitmap
+```
 
 ### 更新日志
+
+####  1.1.0 版本
+
+- 加入 GIF 支持
+- 修复既有问题
 
 #### 1.0.6 版本
 
@@ -124,25 +231,25 @@ logoScale | float | 用于计算 Logo 大小, 过大将覆盖过多数据点而�
 
 - 使用 AwesomeQRCode 的方式变的更优雅
 
-### 1.0.4 版本
+#### 1.0.4 版本
 
 - 可以在二维码中选择嵌入 Logo
 - 演示应用更新
 
-### 1.0.3 版本
+#### 1.0.3 版本
 
 - 在二维码中的 Hints 中加入 CHARACTER_SET => UTF-8 
 - 修复 [#7](https://github.com/SumiMakito/AwesomeQRCode/issues/7) 中提到的编码问题
 
-### 1.0.2 版本
+#### 1.0.2 版本
 
 - 加入使用圆点绘制二维码数据点的选项
 
-### 1.0.1 版本
+#### 1.0.1 版本
 
 - 加入背景二值化的支持
 
-### 1.0.0 版本
+#### 1.0.0 版本
 
 - 初次发布
 
