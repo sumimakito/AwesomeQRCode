@@ -73,7 +73,7 @@ public class AwesomeQRCode {
                                  boolean binarize, int binarizeThreshold, boolean roundedDataDots,
                                  Bitmap logoImage, int logoMargin, int logoCornerRadius, float logoScale) throws IllegalArgumentException {
         if (contents.isEmpty()) {
-            throw new IllegalArgumentException("Error: contents is empty. (contents.isEmpty())");
+            throw new IllegalArgumentException("Error: content is empty. (content.isEmpty())");
         }
         if (size < 0) {
             throw new IllegalArgumentException("Error: a negative size is given. (size < 0)");
@@ -305,7 +305,7 @@ public class AwesomeQRCode {
      */
     private static QRCode getProtoQRCode(String contents, ErrorCorrectionLevel errorCorrectionLevel) throws WriterException {
         if (contents.isEmpty()) {
-            throw new IllegalArgumentException("Found empty contents");
+            throw new IllegalArgumentException("Found empty content");
         }
         Hashtable<EncodeHintType, Object> hintMap = new Hashtable<>();
         hintMap.put(EncodeHintType.CHARACTER_SET, "UTF-8");
@@ -406,7 +406,7 @@ public class AwesomeQRCode {
     }
 
     public static class Renderer {
-        private String contents;
+        private String content;
         private int size;
         private int margin;
         private float dataDotScale;
@@ -419,12 +419,14 @@ public class AwesomeQRCode {
         private int binarizeThreshold;
         private boolean roundedDataDots;
         private Bitmap logoImage;
+        private int gifRenderFrameCount;
         private int logoMargin;
         private int logoCornerRadius;
         private float logoScale;
         private File backgroundGif;
         private File outputFile;
         private ErrorCorrectionLevel errorCorrectionLevel;
+        private RectF gifCropRect;
 
         public Renderer() {
             size = DEFAULT_SIZE;
@@ -442,6 +444,7 @@ public class AwesomeQRCode {
             logoMargin = DEFAULT_LOGO_MARGIN;
             logoCornerRadius = DEFAULT_LOGO_RADIUS;
             logoScale = DEFAULT_LOGO_SCALE;
+            gifRenderFrameCount = -1;
         }
 
         public Renderer autoColor(boolean autoColor) {
@@ -454,8 +457,18 @@ public class AwesomeQRCode {
             return this;
         }
 
+        public Renderer gifRenderFrameCount(int frameCount) {
+            this.gifRenderFrameCount = frameCount;
+            return this;
+        }
+
         public Renderer backgroundGif(File gifFile) {
             this.backgroundGif = gifFile;
+            return this;
+        }
+
+        public Renderer backgroundGifCropRect(RectF cropRect) {
+            this.gifCropRect = cropRect;
             return this;
         }
 
@@ -489,8 +502,8 @@ public class AwesomeQRCode {
             return this;
         }
 
-        public Renderer contents(String contents) {
-            this.contents = contents;
+        public Renderer content(String contents) {
+            this.content = contents;
             return this;
         }
 
@@ -555,14 +568,18 @@ public class AwesomeQRCode {
                 if (!gifPipeline.init(backgroundGif)) {
                     throw new Exception("GifPipeline failed to init: " + gifPipeline.getErrorInfo());
                 }
+                gifPipeline.setCropRect(gifCropRect);
                 gifPipeline.setOutputFile(outputFile);
                 Bitmap frame;
+                int frameIdx = 0;
                 while ((frame = gifPipeline.nextFrame()) != null) {
                     gifPipeline.pushRendered(create(
-                            contents, size, margin, errorCorrectionLevel, dataDotScale, colorDark, colorLight,
+                            content, size, margin, errorCorrectionLevel, dataDotScale, colorDark, colorLight,
                             frame, whiteMargin, autoColor, binarize, binarizeThreshold,
                             roundedDataDots, logoImage, logoMargin, logoCornerRadius, logoScale
                     ));
+                    frameIdx++;
+                    if (gifRenderFrameCount > 0 && frameIdx >= gifRenderFrameCount) break;
                 }
                 if (gifPipeline.getErrorInfo() != null) {
                     throw new Exception("GifPipeline failed to render frames: " + gifPipeline.getErrorInfo());
@@ -573,7 +590,7 @@ public class AwesomeQRCode {
                 return null;
             } else {
                 Bitmap rendered = create(
-                        contents, size, margin, errorCorrectionLevel, dataDotScale, colorDark, colorLight,
+                        content, size, margin, errorCorrectionLevel, dataDotScale, colorDark, colorLight,
                         backgroundImage, whiteMargin, autoColor, binarize, binarizeThreshold,
                         roundedDataDots, logoImage, logoMargin, logoCornerRadius, logoScale
                 );

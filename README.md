@@ -171,4 +171,23 @@ PayPal | Alipay
 <img alt="Apache-2.0 license" src="https://lucene.apache.org/images/mantle-power.png" width="128">
 
 AwesomeQRCode is available under the Apache-2.0 license. See the LICENSE file for more info.   
-Copyright &copy; 2017 Sumi Makito.
+Copyright &copy; 2017-2018 Makito.
+
+## Exclusive Distributor Agreement
+
+By including, importing, modifying, redistributing, or using this library, you acknowledge and agree that you have read and accept the terms of this Exclusive Distributor Agreement.
+
+**WHILE REDISTRIBUTING THIS LIBRARY, THIS AGREEMENT SHALL ALSO BE ATTACHED WITH THE APACHE-2.0 LICENSE.**
+
+You're **free** to:
+
+- Use AwesomeQRCode in your projects (commercial projects are okay as well).
+
++ Modify the code according to your needs.
++ Redistribute the modified code under the Exclusive Distributor Agreement and the Apache-2.0 license.
+
+You're **forbidden** to:
+
++ Make AwesomeQRCode the **main** or the **only** feature of your applications.
++ Regard the **whole or part** of AwesomeQRCode as a paid function. 
++ Make a demo or sample application for AwesomeQRCode and submit the application to the store (IBNLT Google Play Store).

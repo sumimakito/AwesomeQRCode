@@ -9,6 +9,7 @@
           <set>
             <option value="$PROJECT_DIR$" />
             <option value="$PROJECT_DIR$/base" />
+            <option value="$PROJECT_DIR$/expansionpanels" />
             <option value="$PROJECT_DIR$/library" />
           </set>
         </option>

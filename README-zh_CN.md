@@ -168,9 +168,30 @@ PayPal | 支付宝
 ----|----
 [PayPal](https://www.paypal.me/makito) | [支付宝](https://qr.alipay.com/a6x02021re1jk4ftcymlw79)
 
-## 版权信息与授权协议
+## 版权信息与授权许可
 
 <img alt="Apache-2.0 license" src="https://lucene.apache.org/images/mantle-power.png" width="128">
 
 AwesomeQRCode is available under the Apache-2.0 license. See the LICENSE file for more info.   
 Copyright &copy; 2017 Sumi Makito.
+
+## 排他性发行协议
+
+包含、引用、修改、再分发或使用本项目，即代表您已阅读并同意本排他性发行协议中的条款。
+
+**当再发行此开源软件时，此协议需与 APACHE 2.0 许可一同提供。**
+
+您**可以**：
+
+- 在项目中使用 AwesomeQRCode（商业与非商业项目皆可）。
+
+
+- 按需要修改 AwesomeQRCode 的代码。
+- 按照本排他性发行协议以及 APACHE 2.0 许可再发行修改后的代码。
+
+您**不可以**：
+
+- 使用 AwesomeQRCode 作为您应用的**主要**或**唯一**功能。
+- 将 AwesomeQRCode 的**部分**或**全部**内容作为可销售商品。
+- 制作 AwesomeQRCode 的演示应用，并提交至商店（包括但不限于 Google Play Store）。
+

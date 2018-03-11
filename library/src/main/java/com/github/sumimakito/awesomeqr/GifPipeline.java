@@ -1,6 +1,8 @@
 package com.github.sumimakito.awesomeqr;
 
 import android.graphics.Bitmap;
+import android.graphics.Rect;
+import android.graphics.RectF;
 
 import com.waynejo.androidndkgif.GifDecoder;
 import com.waynejo.androidndkgif.GifEncoder;
@@ -14,6 +16,7 @@ public class GifPipeline extends Pipeline {
     private LinkedList<Bitmap> frameSequence;
     private int currentFrame = 0;
     private File outputFile;
+    private RectF cropRect;
 
     @Override
     public boolean init(File file) {
@@ -38,6 +41,10 @@ public class GifPipeline extends Pipeline {
         this.outputFile = outputFile;
     }
 
+    public void setCropRect(RectF cropRect) {
+        this.cropRect = cropRect;
+    }
+
     @Override
     public Bitmap nextFrame() {
         if (gifDecoder.frameNum() == 0) {
@@ -47,6 +54,12 @@ public class GifPipeline extends Pipeline {
         if (currentFrame < gifDecoder.frameNum()) {
             Bitmap frame = gifDecoder.frame(currentFrame);
             currentFrame++;
+            if (cropRect != null) {
+                Bitmap cropped = Bitmap.createBitmap(frame, Math.round(cropRect.left), Math.round(cropRect.top),
+                        Math.round(cropRect.width()), Math.round(cropRect.height()));
+                frame.recycle();
+                return cropped;
+            }
             return frame;
         } else return null;
     }
@@ -63,13 +76,8 @@ public class GifPipeline extends Pipeline {
             return false;
         }
 
-        if (frameSequence.size() ==0) {
+        if (frameSequence.size() == 0) {
             setErrorInfo("Zero frames in the sequence. This is nearly impossible to happen.");
-            return false;
-        }
-
-        if (frameSequence.size() != gifDecoder.frameNum()) {
-            setErrorInfo("Frame leaked. This is nearly impossible to happen.");
             return false;
         }
 
