@@ -69,7 +69,7 @@ public class AwesomeQRCode {
      * @throws IllegalArgumentException Refer to the messages below.
      */
     private static Bitmap create(String contents, int size, int margin, ErrorCorrectionLevel errorCorrectionLevel, float dataDotScale, int colorDark,
-                                 int colorLight, Bitmap backgroundImage, boolean whiteMargin, boolean autoColor,
+                                 int colorLight, Bitmap backgroundImage, float backgroundAlpha, boolean whiteMargin, boolean autoColor,
                                  boolean binarize, int binarizeThreshold, boolean roundedDataDots,
                                  Bitmap logoImage, int logoMargin, int logoCornerRadius, float logoScale) throws IllegalArgumentException {
         if (contents.isEmpty()) {
@@ -95,29 +95,31 @@ public class AwesomeQRCode {
             throw new IllegalArgumentException("Error: an illegal data dot scale is given. (dataDotScale < 0 || dataDotScale > 1)");
         }
         return render(byteMatrix, size - 2 * margin, margin, dataDotScale, colorDark, colorLight, backgroundImage,
-                whiteMargin, autoColor, binarize, binarizeThreshold, roundedDataDots, logoImage, logoMargin,
+                backgroundAlpha, whiteMargin, autoColor, binarize, binarizeThreshold, roundedDataDots, logoImage, logoMargin,
                 logoCornerRadius, logoScale);
     }
 
     private static Bitmap render(ByteMatrix byteMatrix, int innerRenderedSize, int margin, float dataDotScale,
-                                 int colorDark, int colorLight, Bitmap backgroundImage, boolean whiteMargin,
+                                 int colorDark, int colorLight, Bitmap backgroundImage, float backgroundAlpha, boolean whiteMargin,
                                  boolean autoColor, boolean binarize, int binarizeThreshold, boolean roundedDataDots,
                                  Bitmap logoImage, int logoMargin, int logoCornerRadius, float logoScale) {
         int nCount = byteMatrix.getWidth();
-        float nWidth = (float) innerRenderedSize / nCount;
-        float nHeight = (float) innerRenderedSize / nCount;
+        int nSize = Math.round((float) innerRenderedSize / nCount); // Avoid non-integer values
+        int unscaledRenderSize = nSize * nCount; // Draw on unscaled Bitmap first
 
-        Bitmap backgroundImageScaled = Bitmap.createBitmap(
-                innerRenderedSize + (whiteMargin ? 0 : margin * 2),
-                innerRenderedSize + (whiteMargin ? 0 : margin * 2),
+        Bitmap backgroundImageUnscaled = Bitmap.createBitmap(
+                unscaledRenderSize + (whiteMargin ? 0 : margin * 2),
+                unscaledRenderSize + (whiteMargin ? 0 : margin * 2),
                 Bitmap.Config.ARGB_8888);
+
         if (backgroundImage != null) {
-            scaleBitmap(backgroundImage, backgroundImageScaled);
+            scaleBitmap(backgroundImage, backgroundImageUnscaled);
         }
 
-        Bitmap renderedBitmap = Bitmap.createBitmap(innerRenderedSize + margin * 2, innerRenderedSize + margin * 2, Bitmap.Config.ARGB_8888);
+        Bitmap renderedUnscaledBitmap = Bitmap.createBitmap(unscaledRenderSize + margin * 2, unscaledRenderSize + margin * 2, Bitmap.Config.ARGB_8888);
 
         if (autoColor && backgroundImage != null) {
+            colorLight = 0xFFFFFFFF;
             colorDark = getDominantColor(backgroundImage);
         }
 
@@ -129,7 +131,7 @@ public class AwesomeQRCode {
             colorDark = Color.BLACK;
             colorLight = Color.WHITE;
             if (backgroundImage != null)
-                binarize(backgroundImageScaled, binThreshold);
+                binarize(backgroundImageUnscaled, binThreshold);
         }
 
         Paint paint = new Paint();
@@ -147,9 +149,11 @@ public class AwesomeQRCode {
         paintProtector.setAntiAlias(true);
         paintProtector.setStyle(Paint.Style.FILL);
 
-        Canvas canvas = new Canvas(renderedBitmap);
+        Canvas canvas = new Canvas(renderedUnscaledBitmap);
         canvas.drawColor(Color.WHITE);
-        canvas.drawBitmap(backgroundImageScaled, whiteMargin ? margin : 0, whiteMargin ? margin : 0, paint);
+        paint.setAlpha(Math.round(255 * backgroundAlpha));
+        canvas.drawBitmap(backgroundImageUnscaled, whiteMargin ? margin : 0, whiteMargin ? margin : 0, paint);
+        paint.setAlpha(255);
 
         for (int row = 0; row < byteMatrix.getHeight(); row++) {
             for (int col = 0; col < byteMatrix.getWidth(); col++) {
@@ -158,54 +162,54 @@ public class AwesomeQRCode {
                     case BYTE_POS:
                     case BYTE_TMG:
                         canvas.drawRect(
-                                margin + col * nWidth,
-                                margin + row * nHeight,
-                                margin + (col + 1.0f) * nWidth,
-                                margin + (row + 1.0f) * nHeight,
+                                margin + col * nSize,
+                                margin + row * nSize,
+                                margin + (col + 1) * nSize,
+                                margin + (row + 1) * nSize,
                                 paintDark
                         );
                         break;
                     case BYTE_DTA:
                         if (roundedDataDots) {
                             canvas.drawCircle(
-                                    margin + (col + 0.5f) * nWidth,
-                                    margin + (row + 0.5f) * nHeight,
-                                    dataDotScale * nHeight * 0.5f,
+                                    margin + (col + 0.5f) * nSize,
+                                    margin + (row + 0.5f) * nSize,
+                                    dataDotScale * nSize * 0.5f,
                                     paintDark
                             );
                         } else {
                             canvas.drawRect(
-                                    margin + (col + 0.5f * (1 - dataDotScale)) * nWidth,
-                                    margin + (row + 0.5f * (1 - dataDotScale)) * nHeight,
-                                    margin + (col + 0.5f * (1 + dataDotScale)) * nWidth,
-                                    margin + (row + 0.5f * (1 + dataDotScale)) * nHeight,
+                                    margin + (col + 0.5f * (1 - dataDotScale)) * nSize,
+                                    margin + (row + 0.5f * (1 - dataDotScale)) * nSize,
+                                    margin + (col + 0.5f * (1 + dataDotScale)) * nSize,
+                                    margin + (row + 0.5f * (1 + dataDotScale)) * nSize,
                                     paintDark
                             );
                         }
                         break;
                     case BYTE_PTC:
                         canvas.drawRect(
-                                margin + col * nWidth,
-                                margin + row * nHeight,
-                                margin + (col + 1.0f) * nWidth,
-                                margin + (row + 1.0f) * nHeight,
+                                margin + col * nSize,
+                                margin + row * nSize,
+                                margin + (col + 1) * nSize,
+                                margin + (row + 1) * nSize,
                                 paintProtector
                         );
                         break;
                     case BYTE_EPT:
                         if (roundedDataDots) {
                             canvas.drawCircle(
-                                    margin + (col + 0.5f) * nWidth,
-                                    margin + (row + 0.5f) * nHeight,
-                                    dataDotScale * nHeight * 0.5f,
+                                    margin + (col + 0.5f) * nSize,
+                                    margin + (row + 0.5f) * nSize,
+                                    dataDotScale * nSize * 0.5f,
                                     paintLight
                             );
                         } else {
                             canvas.drawRect(
-                                    margin + (col + 0.5f * (1 - dataDotScale)) * nWidth,
-                                    margin + (row + 0.5f * (1 - dataDotScale)) * nHeight,
-                                    margin + (col + 0.5f * (1 + dataDotScale)) * nWidth,
-                                    margin + (row + 0.5f * (1 + dataDotScale)) * nHeight,
+                                    margin + (col + 0.5f * (1 - dataDotScale)) * nSize,
+                                    margin + (row + 0.5f * (1 - dataDotScale)) * nSize,
+                                    margin + (col + 0.5f * (1 + dataDotScale)) * nSize,
+                                    margin + (row + 0.5f * (1 + dataDotScale)) * nSize,
                                     paintLight
                             );
                         }
@@ -218,10 +222,10 @@ public class AwesomeQRCode {
             if (logoScale <= 0 || logoScale >= 1) {
                 logoScale = DEFAULT_LOGO_SCALE;
             }
-            if (logoMargin < 0 || logoMargin * 2 >= innerRenderedSize) {
+            if (logoMargin < 0 || logoMargin * 2 >= unscaledRenderSize) {
                 logoMargin = DEFAULT_LOGO_MARGIN;
             }
-            int logoScaledSize = (int) (innerRenderedSize * logoScale);
+            int logoScaledSize = (int) (unscaledRenderSize * logoScale);
 
             if (logoCornerRadius < 0) logoCornerRadius = 0;
             if (logoCornerRadius * 2 > logoScaledSize)
@@ -248,11 +252,21 @@ public class AwesomeQRCode {
             if (binarize)
                 binarize(logoOpt, binThreshold);
 
-            canvas.drawBitmap(logoOpt, (int) (0.5 * (renderedBitmap.getWidth() - logoOpt.getWidth())),
-                    (int) (0.5 * (renderedBitmap.getHeight() - logoOpt.getHeight())), paint);
+            canvas.drawBitmap(logoOpt, (int) (0.5 * (renderedUnscaledBitmap.getWidth() - logoOpt.getWidth())),
+                    (int) (0.5 * (renderedUnscaledBitmap.getHeight() - logoOpt.getHeight())), paint);
         }
 
-        return renderedBitmap;
+        Bitmap renderedScaledBitmap = Bitmap.createBitmap(
+                innerRenderedSize + (whiteMargin ? 0 : margin * 2),
+                innerRenderedSize + (whiteMargin ? 0 : margin * 2),
+                Bitmap.Config.ARGB_8888);
+
+        scaleBitmap(renderedUnscaledBitmap, renderedScaledBitmap);
+
+        backgroundImageUnscaled.recycle();
+        renderedUnscaledBitmap.recycle();
+
+        return renderedScaledBitmap;
     }
 
     private static ByteMatrix getBitMatrix(String contents, ErrorCorrectionLevel errorCorrectionLevel) {
@@ -387,7 +401,12 @@ public class AwesomeQRCode {
             red = Math.max(0, Math.min(0xFF, red / c));
             green = Math.max(0, Math.min(0xFF, green / c));
             blue = Math.max(0, Math.min(0xFF, blue / c));
-            return (0xFF << 24) | (red << 16) | (green << 8) | blue;
+
+            float[] hsv = new float[3];
+            Color.RGBToHSV(red, green, blue, hsv);
+            hsv[2] = Math.max(hsv[2], 0.7f);
+
+            return (0xFF << 24) | Color.HSVToColor(hsv); // (0xFF << 24) | (red << 16) | (green << 8) | blue;
         }
     }
 
@@ -413,6 +432,7 @@ public class AwesomeQRCode {
         private int colorDark;
         private int colorLight;
         private Bitmap backgroundImage;
+        private float backgroundAlpha;
         private boolean whiteMargin;
         private boolean autoColor;
         private boolean binarize;
@@ -438,6 +458,7 @@ public class AwesomeQRCode {
             colorDark = Color.BLACK;
             whiteMargin = true;
             autoColor = true;
+            backgroundAlpha = 1;
             binarize = false;
             binarizeThreshold = DEFAULT_BINARIZING_THRESHOLD;
             roundedDataDots = false;
@@ -454,6 +475,11 @@ public class AwesomeQRCode {
 
         public Renderer background(Bitmap backgroundImage) {
             this.backgroundImage = backgroundImage;
+            return this;
+        }
+
+        public Renderer backgroundAlpha(float backgroundAlpha) {
+            this.backgroundAlpha = backgroundAlpha;
             return this;
         }
 
@@ -575,7 +601,7 @@ public class AwesomeQRCode {
                 while ((frame = gifPipeline.nextFrame()) != null) {
                     gifPipeline.pushRendered(create(
                             content, size, margin, errorCorrectionLevel, dataDotScale, colorDark, colorLight,
-                            frame, whiteMargin, autoColor, binarize, binarizeThreshold,
+                            frame, backgroundAlpha, whiteMargin, autoColor, binarize, binarizeThreshold,
                             roundedDataDots, logoImage, logoMargin, logoCornerRadius, logoScale
                     ));
                     frameIdx++;
@@ -591,7 +617,7 @@ public class AwesomeQRCode {
             } else {
                 Bitmap rendered = create(
                         content, size, margin, errorCorrectionLevel, dataDotScale, colorDark, colorLight,
-                        backgroundImage, whiteMargin, autoColor, binarize, binarizeThreshold,
+                        backgroundImage, backgroundAlpha, whiteMargin, autoColor, binarize, binarizeThreshold,
                         roundedDataDots, logoImage, logoMargin, logoCornerRadius, logoScale
                 );
                 if (outputFile != null) {

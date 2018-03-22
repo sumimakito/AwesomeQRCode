@@ -214,6 +214,10 @@ Default: *0.2f*
 
 ## Changelog
 
+#### Version 1.1.1
+
+- Fixed a bug that would previously cause the gaps between blocks in position/alignment patterns.
+
 #### Version 1.1.0
 
 + Added the support for GIF backgrounds.
