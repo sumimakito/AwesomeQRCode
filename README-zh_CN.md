@@ -297,8 +297,6 @@ Copyright &copy; 2017-2018 Makito.
 您**可以**：
 
 - 在项目中使用 AwesomeQRCode（商业与非商业项目皆可）。
-
-
 - 按需要修改 AwesomeQRCode 的代码。
 - 按照本排他性发行协议以及 APACHE 2.0 许可再发行修改后的代码。
 
