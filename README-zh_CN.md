@@ -1,4 +1,4 @@
-<img alt="Special, thus awesome." src="art/banner.png" style="max-width: 600px;">
+<img alt="Special, thus awesome." src="art/banner2.jpg" style="max-width: 600px;">
 
 [![](https://jitpack.io/v/SumiMakito/AwesomeQRCode.svg)](https://jitpack.io/#SumiMakito/AwesomeQRCode)
 [![release](https://img.shields.io/github/release/SumiMakito/AwesomeQRCode.svg)](https://github.com/SumiMakito/AwesomeQRCode/releases/latest)

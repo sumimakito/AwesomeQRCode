@@ -1,4 +1,4 @@
-<img alt="Special, thus awesome." src="art/banner.png" style="max-width: 600px;">
+<img alt="Special, thus awesome." src="art/banner2.jpg" style="max-width: 600px;">
 
 [![](https://jitpack.io/v/SumiMakito/AwesomeQRCode.svg)](https://jitpack.io/#SumiMakito/AwesomeQRCode)
 [![release](https://img.shields.io/github/release/SumiMakito/AwesomeQRCode.svg)](https://github.com/SumiMakito/AwesomeQRCode/releases/latest)
@@ -21,7 +21,7 @@ Example 1|Example 2|Example 3
 ------------ | ------------- | -------------
 <img src="art/awesome-qr-1.png" width="400"> | <img src="art/awesome-qr-2.png" width="400"> | <img src="art/awesome-qr-3.png" width="400">
 
-Solid dots instead of blocks|Binarized|With logo at the center
+Round data pattern|Binarized|With logo at the center
 ------------ | ------------- | -------------
 <img src="art/awesome-qr-4.png" width="400"> | <img src="art/awesome-qr-5.png" width="400"> | <img src="art/awesome-qr-6.png" width="400">
 
