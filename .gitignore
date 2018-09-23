@@ -9,7 +9,7 @@
 .externalNativeBuild
 *.apk
 /base
-/apk
+/apk9
 /instant-app
 /release
 /expansionpanels

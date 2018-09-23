@@ -1,13 +1,15 @@
 apply plugin: 'com.android.library'
+apply plugin: 'kotlin-android'
+
 android {
-    compileSdkVersion 27
-    buildToolsVersion '26.0.2'
+    compileSdkVersion 28
+    buildToolsVersion '28.0.2'
 
     defaultConfig {
         minSdkVersion 14
-        targetSdkVersion 27
-        versionCode 9
-        versionName "1.1.1"
+        targetSdkVersion 28
+        versionCode 10
+        versionName "1.2.0"
 
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 
@@ -25,11 +27,15 @@ android {
 }
 
 dependencies {
-    compile fileTree(include: ['*.jar'], dir: 'libs')
-    androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
+    androidTestImplementation('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
-    compile 'com.google.zxing:core:3.2.1'
-    compile 'com.waynejo:androidndkgif:0.3.3'
-    testCompile 'junit:junit:4.12'
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+    implementation 'com.google.zxing:core:3.2.1'
+    implementation 'com.waynejo:androidndkgif:0.3.3'
+    testImplementation 'junit:junit:4.12'
+}
+repositories {
+    mavenCentral()
 }

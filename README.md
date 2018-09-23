@@ -1,70 +1,80 @@
-<img alt="Special, thus awesome." src="art/banner2.jpg" style="max-width: 600px;">
+<img alt="Special, thus awesome." src="art/banner_new.png">
 
 [![](https://jitpack.io/v/SumiMakito/AwesomeQRCode.svg)](https://jitpack.io/#SumiMakito/AwesomeQRCode)
 [![release](https://img.shields.io/github/release/SumiMakito/AwesomeQRCode.svg)](https://github.com/SumiMakito/AwesomeQRCode/releases/latest)
 [![license](https://img.shields.io/github/license/SumiMakito/AwesomeQRCode.svg)](https://github.com/SumiMakito/AwesomeQRCode/blob/master/LICENSE)
 ![](https://img.shields.io/badge/made%20with-%3C3-orange.svg)
 
-AwesomeQRCode - An awesome<del>(simple)</del> QR code generator for Android.
+AwesomeQRCode - An awesome QR code generator for Android.
 
 > [切换至中文（简体）版本？](README-zh_CN.md)
 
 ## Yay! Available on Google Play!
 
+*With the Awesome QR app, you can play with these options like a master!*
+
 <a href="https://play.google.com/store/apps/details?id=com.github.sumimakito.awesomeqrsample" target="_blank"><img src="art/play_store_badge.png" alt="Google Play Store" width="200"></a>
 
-## Examples
+## Showcase
 
-> Try to scan these QR codes below with your smart phone.
+> More styles and options are available in the Awesome QR app.
 
-Example 1|Example 2|Example 3
+No Logo|With Logo|Animated
 ------------ | ------------- | -------------
-<img src="art/awesome-qr-1.png" width="400"> | <img src="art/awesome-qr-2.png" width="400"> | <img src="art/awesome-qr-3.png" width="400">
-
-Round data pattern|Binarized|With logo at the center
------------- | ------------- | -------------
-<img src="art/awesome-qr-4.png" width="400"> | <img src="art/awesome-qr-5.png" width="400"> | <img src="art/awesome-qr-6.png" width="400">
+<img src="art/no_logo.png" width="400"> | <img src="art/with_logo.png" width="400"> | <img src="art/gif.gif" width="400"> 
 
 ## Installation
 
-To add dependency into your project, Add below lines in build.gradle of your project:
+To add the dependency into your project, edit your project-level *build.gradle* first.
 
 ```
 allprojects {
-	repositories {
+    repositories {
 		...
 		maven { url 'https://jitpack.io' }
 	}
 }
 ```
 
-Then, add below lines in build.gradle of your app module:
+Then, edit your *build.gradle* on module level.
+
+> Remember to replace `<LATEST_VERSION_NAME>` with the latest version name.
 
 ```
 dependencies {
-        compile 'com.github.SumiMakito:AwesomeQRCode:1.0.6'
+    compile 'com.github.SumiMakito:AwesomeQRCode:<LATEST_VERSION_NAME>'
 }
 ```
 
-## Quick Start
+## Usage
 
-### 1. "I just wanna get a Bitmap"
+### 1. Say hello to *RenderOption*
 
-In this case, QR code will be generated synchronously. Thus it means you may take a risk blocking the UI thread, which would lead to Application Not Responding (ANR). I strongly recommend you to use it in a non-UI thread.
+Like a recipe, *RenderOption* stores a set of options and it will tell the renderer "how to stylize the QR code for you."
 
 ```java
-new Thread() {
-  @Override
-  public void run() {
-   super.run();
-   Bitmap qrCode = new AwesomeQRCode.Renderer()
-    .contents("Makito loves Kafuu Chino.")
-    .size(800).margin(20)
-    .render();
-  }.start();
+// Java
+RenderOption renderOption = new RenderOption();
+renderOption.setContent("Special, thus awesome.");
+renderOption.setSize(800);
+renderOption.setBorderWidth(20);
+renderOption.setClearBorder(true);
+renderOption.setBackground(background);
 ```
 
-### 2. Generate a QR code asynchronously and show the QR code in an ImageView
+```kotlin
+// Kotlin
+val renderOption = RenderOption()
+renderOption.content = "Special, thus awesome."
+renderOption.size = 800
+renderOption.borderWidth = 20
+renderOption.clearBorder = true
+renderOption.background = background
+```
+
+> But, wait. What is a *background*? Don't worry and keep reading. :)
+
+### 2. Background
 
 ```java
 new AwesomeQRCode.Renderer()
