@@ -37,7 +37,7 @@ allprojects {
 
 Then, edit your *build.gradle* on module level.
 
-> Remember to replace `<LATEST_VERSION_NAME>` with the latest version name showed on this badge [![](https://jitpack.io/v/SumiMakito/Awesome QR code.svg)](https://jitpack.io/#SumiMakito/Awesome QR code).
+> Remember to replace `<LATEST_VERSION_NAME>` with the latest version name showed on this badge [![](https://jitpack.io/v/SumiMakito/AwesomeQRCode.svg)](https://jitpack.io/#SumiMakito/AwesomeQRCode).
 
 ```
 dependencies {
