@@ -44,8 +44,8 @@ class AwesomeQrRenderer {
                 if (!gifPipeline.init(background.inputFile!!)) {
                     throw Exception("GifPipeline failed to init: " + gifPipeline.errorInfo)
                 }
-                gifPipeline.setCropRect(background.clippingRectF!!)
-                gifPipeline.setOutputFile(background.outputFile!!)
+                gifPipeline.clippingRect = background.clippingRectF
+                gifPipeline.outputFile = background.outputFile
                 var frame: Bitmap?
                 var renderedFrame: Bitmap
                 var firstRenderedFrame: Bitmap? = null

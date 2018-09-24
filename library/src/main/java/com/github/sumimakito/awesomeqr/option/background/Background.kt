@@ -5,12 +5,9 @@ import android.graphics.Rect
 import android.graphics.RectF
 import com.github.sumimakito.awesomeqr.util.RectUtils
 
-abstract class Background(var alpha: Float = 0.6f,
+abstract class Background @JvmOverloads constructor(var alpha: Float = 0.6f,
                           var clippingRect: Rect? = null,
                           var bitmap: Bitmap? = null) {
-    var internalPreview: Bitmap? = null
-        private set
-
     var clippingRectF: RectF?
         get() {
             return if (clippingRect == null) null else RectF(clippingRect)

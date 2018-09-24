@@ -9,12 +9,13 @@ import java.io.FileNotFoundException
 import java.util.*
 
 class GifPipeline {
+    var outputFile: File? = null
+    var clippingRect: RectF? = null
     var errorInfo: String? = null
+
     private var gifDecoder: GifDecoder? = null
     private var frameSequence = LinkedList<Bitmap>()
     private var currentFrame = 0
-    private var outputFile: File? = null
-    private var cropRect: RectF? = null
 
     fun init(file: File): Boolean {
         if (!file.exists()) {
@@ -33,25 +34,21 @@ class GifPipeline {
         return true
     }
 
-    fun setOutputFile(outputFile: File) {
-        this.outputFile = outputFile
-    }
-
-    fun setCropRect(cropRect: RectF) {
-        this.cropRect = cropRect
-    }
-
     fun nextFrame(): Bitmap? {
         if (gifDecoder!!.frameNum() == 0) {
             errorInfo = "GIF contains zero frames."
             return null
         }
+        if (clippingRect == null) {
+            errorInfo = "No cropping rect provided."
+            return null
+        }
         if (currentFrame < gifDecoder!!.frameNum()) {
             val frame = gifDecoder!!.frame(currentFrame)
             currentFrame++
-            if (cropRect != null) {
-                val cropped = Bitmap.createBitmap(frame, Math.round(cropRect!!.left), Math.round(cropRect!!.top),
-                        Math.round(cropRect!!.width()), Math.round(cropRect!!.height()))
+            if (clippingRect != null) {
+                val cropped = Bitmap.createBitmap(frame, Math.round(clippingRect!!.left), Math.round(clippingRect!!.top),
+                        Math.round(clippingRect!!.width()), Math.round(clippingRect!!.height()))
                 frame.recycle()
                 return cropped
             }
