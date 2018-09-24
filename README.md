@@ -54,6 +54,7 @@ Like a recipe, *RenderOption* stores a set of options and it will tell the rende
 
 ```java
 // Java
+
 RenderOption renderOption = new RenderOption();
 renderOption.setContent("Special, thus awesome.");
 renderOption.setSize(800);
@@ -64,6 +65,7 @@ renderOption.setBackground(background);
 
 ```kotlin
 // Kotlin
+
 val renderOption = RenderOption()
 renderOption.content = "Special, thus awesome."
 renderOption.size = 800
@@ -74,30 +76,55 @@ renderOption.background = background
 
 > But, wait. What is a *background*? Don't worry and keep reading. :)
 
-### 2. Background
+### 2. Grab a background
 
-```java
-new AwesomeQRCode.Renderer()
- .contents("Makito loves Kafuu Chino.")
- .size(800).margin(20)
- .renderAsync(new AwesomeQRCode.Callback() {
-  @Override
-  public void onRendered(AwesomeQRCode.Renderer renderer, final Bitmap bitmap) {
-   runOnUiThread(new Runnable() {
-    @Override
-    public void run() {
-     // Tip: here we use runOnUiThread(...) to avoid the problems caused by operating UI elements from a non-UI thread.
-     imageView.setImageBitmap(bitmap);
-    }
-   });
-  }
+Awesome QR code natively provides three types of backgrounds. Each background should extend the abstract *Background* class.
 
-  @Override
-  public void onError(AwesomeQRCode.Renderer renderer, Exception e) {
-   e.printStackTrace();
-  }
- });
+```kotlin
+// Kotlin
+
+// A still background (a still image as the background)
+val background = StillBackground()
+background.bitmap = backgroundBitmap // assign a bitmap as the background
+background.clippingRect = Rect(0, 0, 200, 200) // clip the background before applying
+background.alpha = 0.7f // alpha of the background to be drawn
+
+// A blend background (to draw a QR code onto an area of a still image)
+val background = BlendBackground()
+background.bitmap = backgroundBitmap
+background.clippingRect = Rect(0, 0, 200, 200)
+background.alpha = 0.7f
+background.borderRadius = 10 // radius for blending corners
+
+// A gif background (animated)
+val background = GifBackground()
+background.inputFile = gifFile // assign a file object of a gif image to this field
+background.outputFile = File(pictureStorage, "output.gif") // IMPORTANT: the output image will be saved to this file object
+background.clippingRect = Rect(0, 0, 200, 200)
+background.alpha = 0.7f
 ```
+
+### 3. Seek for a rainbow (Color)
+
+> This step is optional since Awesome QR code will use black and white as the default color set.
+
+```kotlin
+// Kotlin
+
+val color = Color()
+color.light = 0xFFFFFFFF.toInt() // for blank spaces
+color.dark = 0xFFFF8C8C.toInt() // for non-blank spaces
+color.background = 0xFFFFFFFF.toInt() // for the background (will be overriden by background images, if set)
+color.auto = false // set to true to automatically pick out colors from the background image (will only work if background image is present)
+```
+
+### 4. Hey. I want a Logo.
+
+> This step is optional since the logo is not required by default.
+
+
+
+
 
 ## Render flow
 
