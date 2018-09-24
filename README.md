@@ -1,11 +1,11 @@
 <img alt="Special, thus awesome." src="art/banner_new.png">
 
-[![](https://jitpack.io/v/SumiMakito/AwesomeQRCode.svg)](https://jitpack.io/#SumiMakito/AwesomeQRCode)
+[![](https://jitpack.io/v/SumiMakito/AwesomeQRCode.svg)](https://jitpack.io/#SumiMakito/Awesome QR code)
 [![release](https://img.shields.io/github/release/SumiMakito/AwesomeQRCode.svg)](https://github.com/SumiMakito/AwesomeQRCode/releases/latest)
 [![license](https://img.shields.io/github/license/SumiMakito/AwesomeQRCode.svg)](https://github.com/SumiMakito/AwesomeQRCode/blob/master/LICENSE)
-![](https://img.shields.io/badge/made%20with-%3C3-orange.svg)
+![](https://img.shields.io/badge/made%20with-cappuccino-orange.svg)
 
-AwesomeQRCode - An awesome QR code generator for Android.
+Awesome QR code - An awesome QR code generator for Android.
 
 > [切换至中文（简体）版本？](README-zh_CN.md)
 
@@ -17,11 +17,13 @@ AwesomeQRCode - An awesome QR code generator for Android.
 
 ## Showcase
 
-> More styles and options are available in the Awesome QR app.
-
-No Logo|With Logo|Animated
+No Logo|With Logo|Animated GIF
 ------------ | ------------- | -------------
 <img src="art/no_logo.png" width="400"> | <img src="art/with_logo.png" width="400"> | <img src="art/gif.gif" width="400"> 
+
+> Listing only several styles for demonstration. 
+>
+> Find out more styles and options in the Awesome QR app!
 
 ## Installation
 
@@ -38,45 +40,55 @@ allprojects {
 
 Then, edit your *build.gradle* on module level.
 
-> Remember to replace `<LATEST_VERSION_NAME>` with the latest version name.
+> Remember to replace `<LATEST_VERSION_NAME>` with the latest version name showed on this badge [![](https://jitpack.io/v/SumiMakito/Awesome QR code.svg)](https://jitpack.io/#SumiMakito/Awesome QR code).
 
 ```
 dependencies {
-    compile 'com.github.SumiMakito:AwesomeQRCode:<LATEST_VERSION_NAME>'
+    compile 'com.github.SumiMakito:Awesome QR code:<LATEST_VERSION_NAME>'
 }
 ```
 
 ## Usage
 
-### 1. Say hello to *RenderOption*
+### 1. Say hello to *RenderOption*.
 
 Like a recipe, *RenderOption* stores a set of options and it will tell the renderer "how to stylize the QR code for you."
-
-```java
-// Java
-
-RenderOption renderOption = new RenderOption();
-renderOption.setContent("Special, thus awesome.");
-renderOption.setSize(800);
-renderOption.setBorderWidth(20);
-renderOption.setClearBorder(true);
-renderOption.setBackground(background);
-```
 
 ```kotlin
 // Kotlin
 
 val renderOption = RenderOption()
-renderOption.content = "Special, thus awesome."
-renderOption.size = 800
-renderOption.borderWidth = 20
-renderOption.clearBorder = true
-renderOption.background = background
+renderOption.content = "Special, thus awesome." // content to encode
+renderOption.size = 800 // size of the final QR code image
+renderOption.borderWidth = 20 // width of the empty space around the QR code 
+renderOption.ecl = ErrorCorrectionLevel.M // (optional) specify an error correction level
+renderOption.patternScale = 0.35f // (optional) specify a scale for patterns
+renderOption.roundedPatterns = true // (optional) if true, blocks will be drawn as dots instead
+renderOption.clearBorder = true // if set to true, the background will NOT be drawn on the border area
+renderOption.color = color // set a color palette for the QR code
+renderOption.background = background // set a background, keep reading to find more about it
+renderOption.logo = logo // set a logo, keep reading to find more about it
+```
+
+```java
+// Java
+
+RenderOption renderOption = new RenderOption();
+renderOption.setContent("Special, thus awesome."); // content to encode
+renderOption.setSize(800); // size of the final QR code image
+renderOption.setBorderWidth(20); // width of the empty space around the QR code
+renderOption.setEcl(ErrorCorrectionLevel.M); // (optional) specify an error correction level
+renderOption.setPatternScale(0.35f); // (optional) specify a scale for patterns
+renderOption.setRoundedPatterns(true); // (optional) if true, blocks will be drawn as dots instead
+renderOption.setClearBorder(true); // if set to true, the background will NOT be drawn on the border area
+renderOption.setColor(color); // set a color palette for the QR code
+renderOption.setBackground(background); // set a background, keep reading to find more about it
+renderOption.setLogo(logo); // set a logo, keep reading to find more about it
 ```
 
 > But, wait. What is a *background*? Don't worry and keep reading. :)
 
-### 2. Grab a background
+### 2. Grab a background.<sup>Optional</sup>
 
 Awesome QR code natively provides three types of backgrounds. Each background should extend the abstract *Background* class.
 
@@ -86,7 +98,7 @@ Awesome QR code natively provides three types of backgrounds. Each background sh
 // A still background (a still image as the background)
 val background = StillBackground()
 background.bitmap = backgroundBitmap // assign a bitmap as the background
-background.clippingRect = Rect(0, 0, 200, 200) // clip the background before applying
+background.clippingRect = Rect(0, 0, 200, 200) // crop the background before applying
 background.alpha = 0.7f // alpha of the background to be drawn
 
 // A blend background (to draw a QR code onto an area of a still image)
@@ -104,7 +116,31 @@ background.clippingRect = Rect(0, 0, 200, 200)
 background.alpha = 0.7f
 ```
 
-### 3. Seek for a rainbow (Color)
+```java
+// Java
+
+// A still background (a still image as the background)
+StillBackground background = new StillBackground(); 
+background.setBitmap(backgroundBitmap); // assign a bitmap as the background
+background.setClippingRect(new Rect(0, 0, 200, 200));// crop the background before 
+background.setAlpha(0.7f); // alpha of the background to be drawn
+
+// A blend background (to draw a QR code onto an area of a still image)
+BlendBackground background = new BlendBackground();
+background.setBitmap(backgroundBitmap);
+background.setClippingRect(new Rect(0, 0, 200, 200));
+background.setAlpha(0.7f);
+background.setBorderRadius(10); // radius for blending corners
+
+// A gif background (animated)
+GifBackground background = new GifBackground();
+background.setInputFile(gifFile); // assign a file object of a gif image to this field
+background.setOutputFile(new File(pictureStorage, "output.gif")); // IMPORTANT: the output image will be saved to this file object
+background.setClippingRect(new Rect(0, 0, 200, 200));
+background.setAlpha(0.7f);
+```
+
+### 3. Seek for a rainbow.<sup>Optional</sup>
 
 > This step is optional since Awesome QR code will use black and white as the default color set.
 
@@ -118,138 +154,97 @@ color.background = 0xFFFFFFFF.toInt() // for the background (will be overriden b
 color.auto = false // set to true to automatically pick out colors from the background image (will only work if background image is present)
 ```
 
-### 4. Hey. I want a Logo.
+```java
+// Java
+
+Color color = new Color(); 
+color.setLight(0xFFFFFFFF); // for blank spaces
+color.setDark(0xFFFF8C8C); // for non-blank spaces
+color.setBackground(0xFFFFFFFF); // for the background (will be overriden by background images, if set)
+color.setAuto(false); // set to true to automatically pick out colors from the background image (will only work if background image is present)
+```
+
+### 4. Hey. I want a Logo.<sup>Optional</sup>
 
 > This step is optional since the logo is not required by default.
 
+```kotlin
+// Kotlin
 
-
-
-
-## Render flow
-
+val logo = Logo()
+logo.bitmap = logoBitmap
+logo.borderRadius = 10 // radius for logo's corners
+logo.borderWidth = 10 // width of the border to be added around the logo
+logo.scale = 0.3f // scale for the logo in the QR code
+logo.clippingRect = Rect(0, 0, 200, 200) // crop the logo image before applying it to the QR code
 ```
-Bitmap bitmap = new AwesomeQRCode.Renderer() ...
+
+```java
+// Java
+
+Logo logo = new Logo();
+logo.setBitmap(logoBitmap);
+logo.setBorderRadius(10); // radius for logo's corners
+logo.setBorderWidth(10); // width of the border to be added around the logo
+logo.setScale(0.3f); // scale for the logo in the QR code
+logo.setClippingRect(new Rect(0, 0, 200, 200)); // crop the logo image before applying it to the QR code
 ```
 
-### Basic
+### 5. Render!
 
-#### .contents(String)
+Meet the magical renderer.
 
-*Required*<br>
-Contents to encode.<br>
-Default: *null*
+##### If you prefer the asynchronous way...
 
-#### .size(int)
+```kotlin
+// Kotlin
 
-*Required*<br>
-Width as well as the height of the output QR code, includes margin.<br>
-Unit: *px*<br>
-Default: *800*
-
-#### .margin(int)
-
-Space to add around the QR code.<br>
-Unit: *px*<br>
-Default: *20*
-
-#### .dataDotScale(float)
-
-Value used to scale down the data pattern's size.<br>
-Default: *0.3f*
-
-#### .roundedDataDots(boolean)
-
-If set to true, data patterns will appear as solid dots instead of small rects.<br>
-Default: *false*
-
-#### .whiteMargin(boolean)
-
-If set to true, the whole QR code will be drawn inside the white border.<br>
-Default: *true*
-
-### Post-processing
-
-#### .binarize(boolean)
-
-If set to true, the whole image will be binarized with the given or default threshold.<br>
-Default: *false*
-
-#### .binarizeThreshold(int)
-
-Threshold used to binarize the whole image.<br>
-Default: *128*
-
-### Color
-
-#### .autoColor(boolean)
-
-If set to true, the dominant color of backgroundImage or every frame of backgroundGif will be used as colorDark.<br>
-Default: *true*
-
-#### .colorDark(int)
-
-Color of "true" blocks in data patterns. Works only when both colorDark and colorLight are set.<br>
-Default: *Color.BLACK*
-
-#### .colorLight(int)
-
-Color of empty space, or "false" blocks in data patterns. Works only when both colorDark and colorLight are set.<br>
-Default: *Color.WHITE*
-
-### Background
-
-#### .background(Bitmap)
-
-Background image to embed in the QR code. Leave null to disable.<br>
-Default: *null*
-
-#### .backgroundGif(File)
-
-*Must be a GIF image. Otherwise an error will be thrown.*<br>
-Background GIF to embed in the QR code. Leave null to disable.<br>
-Default: *null*
-
-#### .backgroundGifCropRect(RectF)
-
-RectF to crop the background GIF before processing.<br>
-Default: *null*
-
-#### .saveTo(File)
-
-*Required when backgroundGif is set.*<br>
-Output file for the final GIF QR code.<br>
-Default: *null*
-
-### Logo
-
-#### .logo(Bitmap)
-
-Logo image to embed at the center of the QR code. Leave null to disable.<br>
-Default: *null*
-
-#### .logoMargin(int)
-
-White margin that appears around the logo image. Leave 0 to disable.<br>
-Unit: *px*<br>
-Default: *10*
-
-#### .logoCornerRadius(int)
-
-Radius of the logo's corners. Leave 0 to disable.<br>
-Unit: *px*<br>
-Default: *8*
-
-#### .logoScale(float)
-
-Value used to scale the logo image. Larger value may lead to difficulties while decoding.<br>
-Default: *0.2f*
-
+val result = AwesomeQrRenderer.renderAsync(renderOption, { result ->
+    if (result.bitmap != null) {
+        // play with the bitmap
+    } else if (result.type == RenderResult.OutputType.GIF) {
+        // If your Background is a GifBackground, the image 
+        // will be saved to the output file set in GifBackground
+        // instead of being returned here. As a result, the 
+        // result.bitmap will be null.
+    } else {
+        // Oops, something gone wrong.
+    }
+}, { 
+    exception -> exception.printStackTrace() 
+    // Oops, something gone wrong.
+})
 ```
-... .render(); // Render and get the Bitmap!
+
+##### Or synchronously...
+
+```kotlin
+// Kotlin
+
+try {
+    val result = AwesomeQrRenderer.render(renderOption)
+    if (result.bitmap != null) {
+        // play with the bitmap
+    } else if (result.type == RenderResult.OutputType.GIF) {
+        // If your Background is a GifBackground, the image 
+        // will be saved to the output file set in GifBackground
+        // instead of being returned here. As a result, the 
+        // result.bitmap will be null.
+    } else {
+        // Oops, something gone wrong.
+    }
+} catch (e: Exception) {
+    e.printStackTrace()
+    // Oops, something gone wrong.
+}
 ```
 
 ## Changelog
+
+#### Version 1.2.0
+
+- Translated into Kotlin.
+- Changed to the RenderOption-Renderer structure.
 
 #### Version 1.1.1
 
@@ -262,10 +257,10 @@ Default: *0.2f*
 
 #### Version 1.0.6
 
-- Fixed a "divide by zero" error mentioned in [#20](https://github.com/SumiMakito/AwesomeQRCode/issues/20).
+- Fixed a "divide by zero" error mentioned in [#20](https://github.com/SumiMakito/Awesome QR code/issues/20).
 
 #### Version 1.0.5
-- The way to use AwesomeQRCode is more elegant.
+- The way to use Awesome QR code is more elegant.
 
 #### Version 1.0.4
 
@@ -275,7 +270,7 @@ Default: *0.2f*
 #### Version 1.0.3
 
 - Added CHARACTER_SET => UTF-8 to QR code's hints before encoding.
-- Fixed an encoding issue mentioned in [#7](https://github.com/SumiMakito/AwesomeQRCode/issues/7).
+- Fixed an encoding issue mentioned in [#7](https://github.com/SumiMakito/Awesome QR code/issues/7).
 
 #### Version 1.0.2
 
@@ -291,37 +286,31 @@ Default: *0.2f*
 
 ## Alternatives
 
-### EFQRCode written in Swift
-
-EFQRCode is a tool to generate QRCode image or recognize QRCode from image, in Swift.
-
-AwesomeQRCode is inspired by [EFQRCode by EyreFree](https://github.com/EyreFree/EFQRCode).
-
-If your application is in need of generating pretty QR codes in Swift, take a look at EFQRCode. It should help.
-
-### Awesome-qr.js written in JavaScript
+#### Awesome-qr.js written in JavaScript
 
 Redirect to [Awesome-qr.js](https://github.com/SumiMakito/Awesome-qr.js)
 
-### <del>AwesomeQRCode-Kotlin written in Kotlin</del>
+#### EFQRCode written in Swift
 
-Deprecated. Not recommended.
+EFQRCode is a tool to generate QRCode image or recognize QRCode from image, in Swift.
 
-Redirect to [AwesomeQRCode-Kotlin](https://github.com/SumiMakito/AwesomeQRCode-Kotlin)
+Awesome QR code is inspired by [EFQRCode by EyreFree](https://github.com/EyreFree/EFQRCode).
+
+If your application is in need of generating pretty QR codes in Swift, take a look at EFQRCode. It should help.
 
 ## Donation
 
-Would you like to buy me a cup of cappuccino?
+If you think Awesome QR code is awesome, would you like to buy me a cup of cappuccino?
 
-PayPal | Alipay
-----|----
-[PayPal](https://www.paypal.me/makito) | [Alipay](https://qr.alipay.com/a6x02021re1jk4ftcymlw79)
+- [PayPal](https://www.paypal.me/makito)
+- [Alipay](https://qr.alipay.com/a6x02021re1jk4ftcymlw79)
 
 ## Copyright &amp; License
 
 <img alt="Apache-2.0 license" src="https://lucene.apache.org/images/mantle-power.png" width="128">
 
-AwesomeQRCode is available under the Apache-2.0 license. See the LICENSE file for more info.   
+Awesome QR code is available under the Apache-2.0 license. See the LICENSE file for more info.
+
 Copyright &copy; 2017-2018 Makito.
 
 ## Exclusive Distributor Agreement
@@ -330,15 +319,15 @@ By including, importing, modifying, redistributing, or using this library, you a
 
 **WHILE REDISTRIBUTING THIS LIBRARY, THIS AGREEMENT SHALL ALSO BE ATTACHED WITH THE APACHE-2.0 LICENSE.**
 
-You're **free** to:
+You're **FREE** to:
 
-- Use AwesomeQRCode in your projects (commercial projects are okay as well).
+- Use Awesome QR code in your projects (commercial projects are okay as well).
 
 + Modify the code according to your needs.
 + Redistribute the modified code under the Exclusive Distributor Agreement and the Apache-2.0 license.
 
-You're **forbidden** to:
+You're **FORBIDDEN** to:
 
-+ Make AwesomeQRCode the **main** or the **only** feature of your applications.
-+ Regard the **whole or part** of AwesomeQRCode as a paid function. 
-+ Make a demo or sample application for AwesomeQRCode and submit the application to the store (IBNLT Google Play Store).
++ Make Awesome QR code the **main** or the **only** feature of your applications.
++ Treat the **whole or part** of Awesome QR code as a paid function. 
++ Make a demo or sample application for Awesome QR code and submit the application to the store (IBNLT Google Play Store, etc.).
