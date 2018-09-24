@@ -1,4 +1,4 @@
-<img alt="Special, thus awesome." src="art/banner_new.png">
+<img alt="Special, thus awesome." src="art/banner_v3.png">
 
 [![](https://jitpack.io/v/SumiMakito/AwesomeQRCode.svg)](https://jitpack.io/#SumiMakito/AwesomeQRCode)
 [![release](https://img.shields.io/github/release/SumiMakito/AwesomeQRCode.svg)](https://github.com/SumiMakito/AwesomeQRCode/releases/latest)
@@ -257,7 +257,7 @@ try {
 
 #### Version 1.0.6
 
-- Fixed a "divide by zero" error mentioned in [#20](https://github.com/SumiMakito/Awesome QR code/issues/20).
+- Fixed a "divide by zero" error mentioned in [#20](https://github.com/SumiMakito/AwesomeQRCode/issues/20).
 
 #### Version 1.0.5
 - The way to use Awesome QR code is more elegant.
@@ -270,7 +270,7 @@ try {
 #### Version 1.0.3
 
 - Added CHARACTER_SET => UTF-8 to QR code's hints before encoding.
-- Fixed an encoding issue mentioned in [#7](https://github.com/SumiMakito/Awesome QR code/issues/7).
+- Fixed an encoding issue mentioned in [#7](https://github.com/SumiMakito/AwesomeQRCode/issues/7).
 
 #### Version 1.0.2
 
@@ -305,9 +305,21 @@ If you think Awesome QR code is awesome, would you like to buy me a cup of cappu
 - [PayPal](https://www.paypal.me/makito)
 - [Alipay](https://qr.alipay.com/a6x02021re1jk4ftcymlw79)
 
+## Sponsors
+
+It is those generous sponsors who supports this project makes the Awesome-qr.js more awesome!
+
+I'd like to express my sincere appreciation to all the generous sponsors.
+
+- [Coxxs](https://coxxs.me/)
+
+## Special thanks
+
+- [Megabits](https://github.com/megabitsenmzq) (Banner art work)
+
 ## Copyright &amp; License
 
-<img alt="Apache-2.0 license" src="https://lucene.apache.org/images/mantle-power.png" width="128">
+<img alt="Apache-2.0 license" src="art/apache_feather.svg" width="64">
 
 Awesome QR code is available under the Apache-2.0 license. See the LICENSE file for more info.
 
