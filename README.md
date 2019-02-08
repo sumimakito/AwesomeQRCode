@@ -30,9 +30,9 @@ To add the dependency into your project, edit your project-level *build.gradle* 
 ```
 allprojects {
     repositories {
-		...
-		maven { url 'https://jitpack.io' }
-	}
+        ...
+        maven { url 'https://jitpack.io' }
+    }
 }
 ```
 
