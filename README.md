@@ -7,8 +7,6 @@
 
 Awesome QR code - An awesome QR code generator for Android.
 
-> [切换至中文（简体）版本？](README-zh_CN.md)
-
 ## Yay! Available on Google Play!
 
 *With the Awesome QR app, you can play with these options like a master!*
@@ -44,7 +42,7 @@ Then, edit your *build.gradle* on module level.
 
 ```
 dependencies {
-    compile 'com.github.SumiMakito:Awesome QR code:<LATEST_VERSION_NAME>'
+    implementation 'com.github.SumiMakito:AwesomeQRCode:<LATEST_VERSION_NAME>'
 }
 ```
 

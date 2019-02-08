@@ -1,4 +1,4 @@
-> 这篇文档中的内容已经过时，目前，中文文档的翻译工作正在进行中，请暂以英文文档的内容为准，谢谢。
+> 这篇文档中的内容已经过时，请暂以英文文档的内容为准，谢谢。
 
 <img alt="Special, thus awesome." src="art/banner2.jpg" style="max-width: 600px;">
 
