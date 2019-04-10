@@ -103,7 +103,7 @@ class AwesomeQrRenderer {
                 val fullCanvas = Canvas(fullRendered)
                 val paint = Paint()
                 paint.isAntiAlias = true
-                paint.color = renderOptions.color.background
+                paint.color = renderOptions.colorQR.background
                 paint.isFilterBitmap = true
                 // What a weird fix... Hope I can find the culprit...
                 fullCanvas.drawBitmap(rendered, Rect(0, 0, rendered.width, rendered.height), scaledBoundingRects[1], paint)
@@ -210,23 +210,23 @@ class AwesomeQrRenderer {
 
             val unscaledFullRenderedBitmap = Bitmap.createBitmap(unscaledFullRenderSize, unscaledFullRenderSize, Bitmap.Config.ARGB_8888)
 
-            if (renderOptions.color.auto && backgroundFrame != null) {
-                renderOptions.color.light = -0x1
-                renderOptions.color.dark = getDominantColor(backgroundFrame)
+            if (renderOptions.colorQR.auto && backgroundFrame != null) {
+                renderOptions.colorQR.light = -0x1
+                renderOptions.colorQR.dark = getDominantColor(backgroundFrame)
             }
 
             val paint = Paint()
             paint.isAntiAlias = true
             val paintBackground = Paint()
             paintBackground.isAntiAlias = true
-            paintBackground.color = renderOptions.color.background
+            paintBackground.color = renderOptions.colorQR.background
             paintBackground.style = Paint.Style.FILL
             val paintDark = Paint()
-            paintDark.color = renderOptions.color.dark
+            paintDark.color = renderOptions.colorQR.dark
             paintDark.isAntiAlias = true
             paintDark.style = Paint.Style.FILL
             val paintLight = Paint()
-            paintLight.color = renderOptions.color.light
+            paintLight.color = renderOptions.colorQR.light
             paintLight.isAntiAlias = true
             paintLight.style = Paint.Style.FILL
 
@@ -364,7 +364,7 @@ class AwesomeQrRenderer {
                 logoCanvas.drawRoundRect(logoRectF, logo.borderRadius.toFloat(), logo.borderRadius.toFloat(), logoPaint)
                 logoPaint.xfermode = PorterDuffXfermode(PorterDuff.Mode.SRC_IN)
                 logoCanvas.drawBitmap(logoScaled, logoRect, logoRect, logoPaint)
-                logoPaint.color = renderOptions.color.light
+                logoPaint.color = renderOptions.colorQR.light
                 logoPaint.style = Paint.Style.STROKE
                 logoPaint.strokeWidth = logo.borderWidth.toFloat()
                 logoCanvas.drawRoundRect(logoRectF, logo.borderRadius.toFloat(), logo.borderRadius.toFloat(), logoPaint)

@@ -1,6 +1,6 @@
 package com.github.sumimakito.awesomeqr.option.color
 
-class Color(var auto: Boolean = false,
+class ColorQR(var auto: Boolean = false,
             var background: Int = 0xFFFFBBAA.toInt(),
             var light: Int = 0xFFFFFFFF.toInt(),
             var dark: Int = 0xFFE57373.toInt(),

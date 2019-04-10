@@ -79,7 +79,7 @@ renderOption.setEcl(ErrorCorrectionLevel.M); // (optional) specify an error corr
 renderOption.setPatternScale(0.35f); // (optional) specify a scale for patterns
 renderOption.setRoundedPatterns(true); // (optional) if true, blocks will be drawn as dots instead
 renderOption.setClearBorder(true); // if set to true, the background will NOT be drawn on the border area
-renderOption.setColor(color); // set a color palette for the QR code
+renderOption.setcolorQR(color); // set a color palette for the QR code
 renderOption.setBackground(background); // set a background, keep reading to find more about it
 renderOption.setLogo(logo); // set a logo, keep reading to find more about it
 ```
@@ -155,7 +155,7 @@ color.auto = false // set to true to automatically pick out colors from the back
 ```java
 // Java
 
-Color color = new Color(); 
+ColorQR color = new Color(); 
 color.setLight(0xFFFFFFFF); // for blank spaces
 color.setDark(0xFFFF8C8C); // for non-blank spaces
 color.setBackground(0xFFFFFFFF); // for the background (will be overriden by background images, if set)
