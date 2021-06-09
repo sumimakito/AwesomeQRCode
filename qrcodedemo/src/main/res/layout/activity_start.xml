@@ -6,10 +6,10 @@
   android:layout_height="match_parent"
   tools:context=".StartActivity">
 
-  <TextView
+  <ImageView
+    android:id="@+id/imageView"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:text="Hello World!"
     app:layout_constraintBottom_toBottomOf="parent"
     app:layout_constraintLeft_toLeftOf="parent"
     app:layout_constraintRight_toRightOf="parent"
