@@ -14,6 +14,8 @@ class RenderOption {
     var roundedPatterns = false
     var color: Color = Color()
     var ecl = ErrorCorrectionLevel.M
+    var qrCodeVersion: Int = 6
+    var isCustomPositions: Boolean = true
 
     var background: Background? = null
         set(value) {
@@ -55,6 +57,8 @@ class RenderOption {
 
         renderConfig.background = background?.duplicate()
         renderConfig.logo = logo?.duplicate()
+
+        renderConfig.qrCodeVersion = qrCodeVersion
         return renderConfig
     }
 }

@@ -188,7 +188,34 @@ logo.setScale(0.3f); // scale for the logo in the QR code
 logo.setClippingRect(new Rect(0, 0, 200, 200)); // crop the logo image before applying it to the QR code
 ```
 
-### 5. Render!
+### 5 Hey! I want QrCode different Versions (say version 6) and I want Customized Positions
+
+```kotlin
+var renderOption = RenderOption()
+// version
+renderOption.qrCodeVersion = 6 // or set the version you need
+// rounded position
+renderOption.isCustomPositions = true
+val color = Color()
+color.light = -0x1
+color.dark = -0x1000000
+color.background = -0x1
+color.auto = false
+
+color.topLeftColor = ResourcesCompat.getColor(this.resources, R.color.top_left, null)
+color.topRigntColor = ResourcesCompat.getColor(this.resources, R.color.top_right, null)
+color.bottomLeftColor = ResourcesCompat.getColor(this.resources, R.color.bottom_left, null)
+
+renderOption.color = color
+```
+
+output:
+
+<img src="art/custom-qrcode-v6.jpg" width="400">
+
+Please see [fun buildNiceQrCode(link: String)](https://github.com/fahimfarhan/AwesomeQRCode/blob/6e1132f8c683d4d9f0c2c13ac1fc8cf7714b8fd0/qrcodedemo/src/main/java/app/soumicslab/qrcodedemo/StartActivity.kt#L131) for the complete code.
+
+### 6. Render!
 
 Meet the magical renderer.
 

@@ -1,6 +1,7 @@
 package com.github.sumimakito.awesomeqr
 
 import android.graphics.*
+import android.util.Log
 import com.github.sumimakito.awesomeqr.option.RenderOption
 import com.github.sumimakito.awesomeqr.option.background.BlendBackground
 import com.github.sumimakito.awesomeqr.option.background.GifBackground
@@ -12,10 +13,28 @@ import com.google.zxing.qrcode.decoder.ErrorCorrectionLevel
 import com.google.zxing.qrcode.encoder.ByteMatrix
 import com.google.zxing.qrcode.encoder.Encoder
 import com.google.zxing.qrcode.encoder.QRCode
+import java.lang.Math.max
 import java.util.*
 
 class AwesomeQrRenderer {
     companion object {
+        /**
+         * @Brief: Check out this qrCode explanation before doing anything:
+         * [tutorial](https://www.thonky.com/qr-code-tutorial/data-encoding)
+         * [table](https://www.thonky.com/qr-code-tutorial/character-capacities)
+         * [wikipedia] (https://en.wikipedia.org/wiki/QR_code)
+         *
+         * your qecode input size depends on QRCODE_VERSION and ERROR_CORRECTION_LEVEL. See link 2 for details.
+         * For example, qr version = 6, ecl = H can hold string with size (58 - 1) = 57
+         *
+         * I am setting verison = 6, ecl = H after some trial and errors
+         *
+         * Higher versions take more time on scanners, has more capacity
+         * Logo size max = 40 % of generated qrCode's height
+         *
+         * */
+
+        val TAG: String = AwesomeQrRenderer::class.java.simpleName
         /**
          * For more information about QR code, refer to: https://en.wikipedia.org/wiki/QR_code
          * BYTE_EPT: Empty block
@@ -70,17 +89,17 @@ class AwesomeQrRenderer {
                 var clippedBackground: Bitmap? = null
                 if (background.clippingRect != null) {
                     clippedBackground = Bitmap.createBitmap(
-                            background.bitmap,
-                            Math.round(background.clippingRect!!.left.toFloat()),
-                            Math.round(background.clippingRect!!.top.toFloat()),
-                            Math.round(background.clippingRect!!.width().toFloat()),
-                            Math.round(background.clippingRect!!.height().toFloat())
+                        background.bitmap!!,
+                        Math.round(background.clippingRect!!.left.toFloat()),
+                        Math.round(background.clippingRect!!.top.toFloat()),
+                        Math.round(background.clippingRect!!.width().toFloat()),
+                        Math.round(background.clippingRect!!.height().toFloat())
                     )
                 }
                 val rendered = renderFrame(renderOptions, clippedBackground ?: background.bitmap)
                 clippedBackground?.recycle()
                 val scaledBoundingRects = scaleImageBoundingRectByClippingRect(background.bitmap!!, renderOptions.size, background.clippingRect)
-                val fullRendered = Bitmap.createScaledBitmap(background.bitmap, scaledBoundingRects[0].width(), scaledBoundingRects[0].height(), true)
+                val fullRendered = Bitmap.createScaledBitmap(background.bitmap!!, scaledBoundingRects[0].width(), scaledBoundingRects[0].height(), true)
                 val fullCanvas = Canvas(fullRendered)
                 val paint = Paint()
                 paint.isAntiAlias = true
@@ -94,11 +113,11 @@ class AwesomeQrRenderer {
                 var clippedBackground: Bitmap? = null
                 if (background.clippingRect != null) {
                     clippedBackground = Bitmap.createBitmap(
-                            background.bitmap,
-                            Math.round(background.clippingRect!!.left.toFloat()),
-                            Math.round(background.clippingRect!!.top.toFloat()),
-                            Math.round(background.clippingRect!!.width().toFloat()),
-                            Math.round(background.clippingRect!!.height().toFloat())
+                        background.bitmap!!,
+                        Math.round(background.clippingRect!!.left.toFloat()),
+                        Math.round(background.clippingRect!!.top.toFloat()),
+                        Math.round(background.clippingRect!!.width().toFloat()),
+                        Math.round(background.clippingRect!!.height().toFloat())
                     )
                 }
                 val rendered = renderFrame(renderOptions, clippedBackground ?: background.bitmap)
@@ -143,8 +162,8 @@ class AwesomeQrRenderer {
             if (renderOptions.size - 2 * renderOptions.borderWidth <= 0) {
                 throw IllegalArgumentException("Error: there is no space left for the QRCode. (size - 2 * borderWidth <= 0)")
             }
-            val byteMatrix = getByteMatrix(renderOptions.content, renderOptions.ecl)
-                    ?: throw NullPointerException("Error: ByteMatrix based on content is null. (getByteMatrix(content, ecl) == null)")
+            val byteMatrix = getByteMatrix(renderOptions.content, renderOptions.ecl, renderOptions.qrCodeVersion)
+                ?: throw NullPointerException("Error: ByteMatrix based on content is null. (getByteMatrix(content, ecl) == null)")
             val innerRenderedSize = renderOptions.size - 2 * renderOptions.borderWidth
             val nCount = byteMatrix.width
             val nSize = Math.round(innerRenderedSize.toFloat() / nCount) // Avoid non-integer values
@@ -175,15 +194,16 @@ class AwesomeQrRenderer {
             }
 
             val backgroundDrawingRect = Rect(
-                    if (!renderOptions.clearBorder) 0 else renderOptions.borderWidth,
-                    if (!renderOptions.clearBorder) 0 else renderOptions.borderWidth,
-                    unscaledFullRenderSize - renderOptions.borderWidth * if (renderOptions.clearBorder) 1 else 0,
-                    unscaledFullRenderSize - renderOptions.borderWidth * if (renderOptions.clearBorder) 1 else 0
+                if (!renderOptions.clearBorder) 0 else renderOptions.borderWidth,
+                if (!renderOptions.clearBorder) 0 else renderOptions.borderWidth,
+                unscaledFullRenderSize - renderOptions.borderWidth * if (renderOptions.clearBorder) 1 else 0,
+                unscaledFullRenderSize - renderOptions.borderWidth * if (renderOptions.clearBorder) 1 else 0
             )
 
             if (backgroundFrameTemp == null) {
                 if (renderOptions.background is StillBackground
-                        || renderOptions.background is BlendBackground) {
+                    || renderOptions.background is BlendBackground
+                ) {
                     backgroundFrameTemp = renderOptions.background!!.bitmap
                 }
             }
@@ -209,6 +229,7 @@ class AwesomeQrRenderer {
             paintLight.color = renderOptions.color.light
             paintLight.isAntiAlias = true
             paintLight.style = Paint.Style.FILL
+
             val paintProtector = Paint()
             paintProtector.color = Color.argb(120, 255, 255, 255)
             paintProtector.isAntiAlias = true
@@ -217,79 +238,120 @@ class AwesomeQrRenderer {
             val unscaledCanvas = Canvas(unscaledFullRenderedBitmap)
             unscaledCanvas.drawColor(Color.WHITE)
             unscaledCanvas.drawRect(
-                    (if (renderOptions.clearBorder) renderOptions.borderWidth else 0).toFloat(),
-                    (if (renderOptions.clearBorder) renderOptions.borderWidth else 0).toFloat(),
-                    (unscaledInnerRenderSize + if (renderOptions.clearBorder) renderOptions.borderWidth else renderOptions.borderWidth * 2).toFloat(),
-                    (unscaledInnerRenderSize + if (renderOptions.clearBorder) renderOptions.borderWidth else renderOptions.borderWidth * 2).toFloat(),
-                    paintBackground
+                (if (renderOptions.clearBorder) renderOptions.borderWidth else 0).toFloat(),
+                (if (renderOptions.clearBorder) renderOptions.borderWidth else 0).toFloat(),
+                (unscaledInnerRenderSize + if (renderOptions.clearBorder) renderOptions.borderWidth else renderOptions.borderWidth * 2).toFloat(),
+                (unscaledInnerRenderSize + if (renderOptions.clearBorder) renderOptions.borderWidth else renderOptions.borderWidth * 2).toFloat(),
+                paintBackground
             )
             if (backgroundFrame != null && renderOptions.background != null) {
                 paint.alpha = Math.round(255 * renderOptions.background!!.alpha)
                 unscaledCanvas.drawBitmap(
-                        backgroundFrame, null,
-                        backgroundDrawingRect,
-                        paint
+                    backgroundFrame, null,
+                    backgroundDrawingRect,
+                    paint
                 )
             }
             paint.alpha = 255
 
+/*            Log.e(TAG, "byteMatrix =\n${byteMatrix}")
+
+            var str = "\n\n------------\n"
+            for (row in 0 until byteMatrix.height) {
+                for (col in 0 until byteMatrix.width) {
+                    str += byteMatrix.get(col, row)
+                }
+                str += "\n"
+            }
+            Log.e(TAG, str)*/
             for (row in 0 until byteMatrix.height) {
                 for (col in 0 until byteMatrix.width) {
                     when (byteMatrix.get(col, row)) {
-                        BYTE_AGN, BYTE_POS, BYTE_TMG -> unscaledCanvas.drawRect(
-                                (renderOptions.borderWidth + col * nSize).toFloat(),
-                                (renderOptions.borderWidth + row * nSize).toFloat(),
-                                (renderOptions.borderWidth + (col + 1) * nSize).toFloat(),
-                                (renderOptions.borderWidth + (row + 1) * nSize).toFloat(),
-                                paintDark
+                        BYTE_POS -> {
+                            if(!renderOptions.isCustomPositions) {
+                                unscaledCanvas.drawRect(
+                                    (renderOptions.borderWidth + col * nSize).toFloat(),
+                                    (renderOptions.borderWidth + row * nSize).toFloat(),
+                                    (renderOptions.borderWidth + (col + 1) * nSize).toFloat(),
+                                    (renderOptions.borderWidth + (row + 1) * nSize).toFloat(),
+                                    paintDark
+                                )
+
+                            }
+                        }
+                        BYTE_TMG, BYTE_AGN -> unscaledCanvas.drawCircle(
+                            renderOptions.borderWidth + (col + 0.5f) * nSize,
+                            renderOptions.borderWidth + (row + 0.5f) * nSize,
+                            renderOptions.patternScale * nSize.toFloat() * 0.5f,
+                            paintDark
                         )
                         BYTE_DTA -> if (renderOptions.roundedPatterns) {
                             unscaledCanvas.drawCircle(
-                                    renderOptions.borderWidth + (col + 0.5f) * nSize,
-                                    renderOptions.borderWidth + (row + 0.5f) * nSize,
-                                    renderOptions.patternScale * nSize.toFloat() * 0.5f,
-                                    paintDark
+                                renderOptions.borderWidth + (col + 0.5f) * nSize,
+                                renderOptions.borderWidth + (row + 0.5f) * nSize,
+                                renderOptions.patternScale * nSize.toFloat() * 0.5f,
+                                paintDark
                             )
                         } else {
                             unscaledCanvas.drawRect(
-                                    renderOptions.borderWidth + (col + 0.5f * (1 - renderOptions.patternScale)) * nSize,
-                                    renderOptions.borderWidth + (row + 0.5f * (1 - renderOptions.patternScale)) * nSize,
-                                    renderOptions.borderWidth + (col + 0.5f * (1 + renderOptions.patternScale)) * nSize,
-                                    renderOptions.borderWidth + (row + 0.5f * (1 + renderOptions.patternScale)) * nSize,
-                                    paintDark
+                                renderOptions.borderWidth + (col + 0.5f * (1 - renderOptions.patternScale)) * nSize,
+                                renderOptions.borderWidth + (row + 0.5f * (1 - renderOptions.patternScale)) * nSize,
+                                renderOptions.borderWidth + (col + 0.5f * (1 + renderOptions.patternScale)) * nSize,
+                                renderOptions.borderWidth + (row + 0.5f * (1 + renderOptions.patternScale)) * nSize,
+                                paintDark
                             )
                         }
                         BYTE_PTC -> unscaledCanvas.drawRect(
-                                (renderOptions.borderWidth + col * nSize).toFloat(),
-                                (renderOptions.borderWidth + row * nSize).toFloat(),
-                                (renderOptions.borderWidth + (col + 1) * nSize).toFloat(),
-                                (renderOptions.borderWidth + (row + 1) * nSize).toFloat(),
-                                paintProtector
+                            (renderOptions.borderWidth + col * nSize).toFloat(),
+                            (renderOptions.borderWidth + row * nSize).toFloat(),
+                            (renderOptions.borderWidth + (col + 1) * nSize).toFloat(),
+                            (renderOptions.borderWidth + (row + 1) * nSize).toFloat(),
+                            paintProtector
                         )
                         BYTE_EPT -> if (renderOptions.roundedPatterns) {
                             unscaledCanvas.drawCircle(
-                                    renderOptions.borderWidth + (col + 0.5f) * nSize,
-                                    renderOptions.borderWidth + (row + 0.5f) * nSize,
-                                    renderOptions.patternScale * nSize.toFloat() * 0.5f,
-                                    paintLight
+                                renderOptions.borderWidth + (col + 0.5f) * nSize,
+                                renderOptions.borderWidth + (row + 0.5f) * nSize,
+                                renderOptions.patternScale * nSize.toFloat() * 0.5f,
+                                paintLight
                             )
                         } else {
                             unscaledCanvas.drawRect(
-                                    renderOptions.borderWidth + (col + 0.5f * (1 - renderOptions.patternScale)) * nSize,
-                                    renderOptions.borderWidth + (row + 0.5f * (1 - renderOptions.patternScale)) * nSize,
-                                    renderOptions.borderWidth + (col + 0.5f * (1 + renderOptions.patternScale)) * nSize,
-                                    renderOptions.borderWidth + (row + 0.5f * (1 + renderOptions.patternScale)) * nSize,
-                                    paintLight
+                                renderOptions.borderWidth + (col + 0.5f * (1 - renderOptions.patternScale)) * nSize,
+                                renderOptions.borderWidth + (row + 0.5f * (1 - renderOptions.patternScale)) * nSize,
+                                renderOptions.borderWidth + (col + 0.5f * (1 + renderOptions.patternScale)) * nSize,
+                                renderOptions.borderWidth + (row + 0.5f * (1 + renderOptions.patternScale)) * nSize,
+                                paintLight
                             )
                         }
                     }
                 }
             }
 
+            // for the circles
+            var maximus = 0
+            for (row in 0 until byteMatrix.height) {
+                var continuousTwoCount = 0
+                for (col in 0 until byteMatrix.width) {
+                    if(byteMatrix.get(col, row) == BYTE_POS) {
+                        continuousTwoCount++
+                        maximus = max(maximus, continuousTwoCount)
+                    }else {
+                        continuousTwoCount = 0
+                    }
+                }
+            }
+
+
+            if(renderOptions.isCustomPositions) {
+                roundedRectangularPositionFinder(unscaledCanvas, byteMatrix, renderOptions, nSize, maximus, paintDark, paintBackground)
+            }
+            //circlePositionFinder(unscaledCanvas, byteMatrix, renderOptions, nSize, maximus, paintDark, paintBackground)
+
             if (renderOptions.logo != null && renderOptions.logo!!.bitmap != null) {
                 val logo = renderOptions.logo!!
                 val logoScaledSize = (unscaledInnerRenderSize * logo.scale).toInt()
-                val logoScaled = Bitmap.createScaledBitmap(logo.bitmap, logoScaledSize, logoScaledSize, true)
+                val logoScaled = Bitmap.createScaledBitmap(logo.bitmap!!, logoScaledSize, logoScaledSize, true)
                 val logoOpt = Bitmap.createBitmap(logoScaled.width, logoScaled.height, Bitmap.Config.ARGB_8888)
                 val logoCanvas = Canvas(logoOpt)
                 val logoRect = Rect(0, 0, logoScaled.width, logoScaled.height)
@@ -307,13 +369,13 @@ class AwesomeQrRenderer {
                 logoPaint.strokeWidth = logo.borderWidth.toFloat()
                 logoCanvas.drawRoundRect(logoRectF, logo.borderRadius.toFloat(), logo.borderRadius.toFloat(), logoPaint)
                 unscaledCanvas.drawBitmap(logoOpt, (0.5 * (unscaledFullRenderedBitmap.width - logoOpt.width)).toInt().toFloat(),
-                        (0.5 * (unscaledFullRenderedBitmap.height - logoOpt.height)).toInt().toFloat(), paint)
+                    (0.5 * (unscaledFullRenderedBitmap.height - logoOpt.height)).toInt().toFloat(), paint)
             }
 
             val renderedScaledBitmap = Bitmap.createBitmap(
-                    renderOptions.size,
-                    renderOptions.size,
-                    Bitmap.Config.ARGB_8888
+                renderOptions.size,
+                renderOptions.size,
+                Bitmap.Config.ARGB_8888
             )
 
             val scaledCanvas = Canvas(renderedScaledBitmap)
@@ -343,9 +405,105 @@ class AwesomeQrRenderer {
             return renderedResultBitmap
         }
 
-        private fun getByteMatrix(contents: String, errorCorrectionLevel: ErrorCorrectionLevel): ByteMatrix? {
+        private fun circlePositionFinder(unscaledCanvas: Canvas, byteMatrix: ByteMatrix,
+                                         renderOptions: RenderOption, nSize: Int,
+                                         maximus: Int, paintDark: Paint, paintBackground: Paint) {
+            val paintGreenAccent = Paint()
+            paintGreenAccent.color = 0xFF145553.toInt()
+            paintGreenAccent.isAntiAlias = true
+            paintGreenAccent.style = Paint.Style.FILL
+
+            val paintRedAccent = Paint()
+            paintRedAccent.color = 0xFFD12725.toInt()
+            paintRedAccent.isAntiAlias = true
+            paintRedAccent.style = Paint.Style.FILL
+
+            // for the circles
+            val heightPx = byteMatrix.height * nSize
+            val widthPx = byteMatrix.width * nSize
+
+            val radiusPx: Float = (maximus / 2 * nSize).toFloat()
+            val cx1 = renderOptions.borderWidth + radiusPx
+            val cy1 = renderOptions.borderWidth + radiusPx
+
+            val cx2 = renderOptions.borderWidth + radiusPx
+            val cy2 = renderOptions.borderWidth + (heightPx - radiusPx)
+
+            val cx3 = renderOptions.borderWidth + (widthPx - radiusPx)
+            val cy3 = renderOptions.borderWidth + radiusPx
+
+            unscaledCanvas.drawCircle(cx1, cy1, radiusPx, paintDark)
+            unscaledCanvas.drawCircle(cx2, cy2, radiusPx, paintDark)
+            unscaledCanvas.drawCircle(cx3, cy3, radiusPx, paintDark)
+
+            unscaledCanvas.drawCircle(cx1, cy1, radiusPx - nSize, paintBackground)
+            unscaledCanvas.drawCircle(cx2, cy2, radiusPx - nSize, paintBackground)
+            unscaledCanvas.drawCircle(cx3, cy3, radiusPx - nSize, paintBackground)
+
+            unscaledCanvas.drawCircle(cx1, cy1, radiusPx - 2*nSize, paintDark)
+            unscaledCanvas.drawCircle(cx2, cy2, radiusPx - 2*nSize, paintDark)
+            unscaledCanvas.drawCircle(cx3, cy3, radiusPx - 2*nSize, paintDark)
+        }
+
+        private fun roundedRectangularPositionFinder(unscaledCanvas: Canvas, byteMatrix: ByteMatrix,
+                                                     renderOptions: RenderOption, nSize: Int,
+                                                     maximus: Int, paintDark: Paint, paintBackground: Paint) {
+            Log.e(TAG, "maximus = ${maximus}")
+            val heightPx = byteMatrix.height * nSize
+            val widthPx = byteMatrix.width * nSize
+
+            val robWidthPx: Float = renderOptions.borderWidth.toFloat()
+            val sideLengthPx: Float = (maximus * nSize).toFloat()
+            val dx: Float = 0.7f*nSize.toFloat() // renderOptions.patternScale * 0.7F * nSize.toFloat() // sideLengthPx / 10
+            val dxx = 2*nSize.toFloat() // dx + sideLengthPx / 70 * 13
+            val cornerRadiusPx = 12F
+
+            val topLeftPaint = Paint()
+            topLeftPaint.color = renderOptions.color.topLeftColor
+            topLeftPaint.isAntiAlias = true
+            topLeftPaint.style = Paint.Style.FILL
+
+            val topRightPaint = Paint()
+            topRightPaint.color = renderOptions.color.topRigntColor
+            topRightPaint.isAntiAlias = true
+            topRightPaint.style = Paint.Style.FILL
+
+            val bottomLeft = Paint()
+            bottomLeft.color = renderOptions.color.bottomLeftColor
+            bottomLeft.isAntiAlias = true
+            bottomLeft.style = Paint.Style.FILL
+
+            // top left
+            unscaledCanvas.drawRoundRect(RectF(0F+robWidthPx, 0F+robWidthPx,
+                robWidthPx + sideLengthPx, robWidthPx + sideLengthPx),
+                cornerRadiusPx, cornerRadiusPx, paintDark)
+            unscaledCanvas.drawRoundRect(RectF(0F+robWidthPx+dx, 0F+robWidthPx+dx,
+                robWidthPx + sideLengthPx - dx, robWidthPx + sideLengthPx - dx),
+                cornerRadiusPx, cornerRadiusPx, paintBackground)
+            unscaledCanvas.drawRoundRect(RectF(0F+robWidthPx + dxx, 0F+robWidthPx + dxx,
+                robWidthPx + sideLengthPx - dxx, robWidthPx + sideLengthPx - dxx),
+                cornerRadiusPx, cornerRadiusPx, topLeftPaint)
+
+            // top right
+            unscaledCanvas.drawRoundRect(RectF(widthPx - sideLengthPx + robWidthPx, 0+robWidthPx, widthPx+robWidthPx, robWidthPx+sideLengthPx),
+                cornerRadiusPx, cornerRadiusPx, paintDark)
+            unscaledCanvas.drawRoundRect(RectF(widthPx - sideLengthPx + robWidthPx+dx, 0+robWidthPx+dx, widthPx+robWidthPx-dx, robWidthPx+sideLengthPx-dx),
+                cornerRadiusPx, cornerRadiusPx, paintBackground)
+            unscaledCanvas.drawRoundRect(RectF(widthPx - sideLengthPx + robWidthPx+dxx, 0+robWidthPx+dxx, widthPx+robWidthPx-dxx, robWidthPx+sideLengthPx-dxx),
+                cornerRadiusPx, cornerRadiusPx, topLeftPaint)
+
+            // bottom left
+            unscaledCanvas.drawRoundRect(RectF(0F+robWidthPx, heightPx-sideLengthPx+robWidthPx, robWidthPx+sideLengthPx, robWidthPx+heightPx),
+                cornerRadiusPx, cornerRadiusPx, paintDark)
+            unscaledCanvas.drawRoundRect(RectF(0F+robWidthPx+dx, heightPx-sideLengthPx+robWidthPx+dx, robWidthPx+sideLengthPx-dx, robWidthPx+heightPx-dx),
+                cornerRadiusPx, cornerRadiusPx, paintBackground)
+            unscaledCanvas.drawRoundRect(RectF(0F+robWidthPx+dxx, heightPx-sideLengthPx+robWidthPx+dxx, robWidthPx+sideLengthPx-dxx, robWidthPx+heightPx-dxx),
+                cornerRadiusPx, cornerRadiusPx, bottomLeft)
+        }
+
+        private fun getByteMatrix(contents: String, errorCorrectionLevel: ErrorCorrectionLevel, qrCodeVersion: Int): ByteMatrix? {
             try {
-                val qrCode = getProtoQrCode(contents, errorCorrectionLevel)
+                val qrCode = getProtoQrCode(contents, errorCorrectionLevel, qrCodeVersion)
                 val agnCenter = qrCode.version.alignmentPatternCenters
                 val byteMatrix = qrCode.matrix
                 val matSize = byteMatrix.width
@@ -393,13 +551,15 @@ class AwesomeQrRenderer {
          * @throws WriterException Refer to the messages below.
          */
         @Throws(WriterException::class)
-        private fun getProtoQrCode(contents: String, errorCorrectionLevel: ErrorCorrectionLevel): QRCode {
+        private fun getProtoQrCode(contents: String, errorCorrectionLevel: ErrorCorrectionLevel,
+                                   version: Int): QRCode {
             if (contents.isEmpty()) {
                 throw IllegalArgumentException("Found empty content.")
             }
             val hintMap = Hashtable<EncodeHintType, Any>()
             hintMap[EncodeHintType.CHARACTER_SET] = "UTF-8"
             hintMap[EncodeHintType.ERROR_CORRECTION] = errorCorrectionLevel
+            hintMap[EncodeHintType.QR_VERSION] = version
             return Encoder.encode(contents, errorCorrectionLevel, hintMap)
         }
 
@@ -445,7 +605,7 @@ class AwesomeQrRenderer {
             val scaleMatrix = Matrix()
             scaleMatrix.setScale(ratioX, ratioY, middleX, middleY)
             val canvas = Canvas(dst)
-            canvas.matrix = scaleMatrix
+            canvas.setMatrix(scaleMatrix)
             canvas.drawBitmap(src, middleX - src.width / 2,
                     middleY - src.height / 2, cPaint)
         }
@@ -500,14 +660,14 @@ class AwesomeQrRenderer {
             val clippingSize = clippingRect.width().toFloat()
             val scalingRatio = size / clippingSize
             return arrayOf(
-                    RectUtils.round(RectF(
-                            0f, 0f,
-                            bitmap.width * scalingRatio, bitmap.height * scalingRatio)
-                    ),
-                    RectUtils.round(RectF(
-                            clippingRect.left * scalingRatio, clippingRect.top * scalingRatio,
-                            clippingRect.right * scalingRatio, clippingRect.bottom * scalingRatio)
-                    )
+                RectUtils.round(RectF(
+                    0f, 0f,
+                    bitmap.width * scalingRatio, bitmap.height * scalingRatio)
+                ),
+                RectUtils.round(RectF(
+                    clippingRect.left * scalingRatio, clippingRect.top * scalingRatio,
+                    clippingRect.right * scalingRatio, clippingRect.bottom * scalingRatio)
+                )
             )
         }
     }
