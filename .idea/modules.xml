@@ -2,8 +2,8 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/AwesomeQRCode.iml" filepath="$PROJECT_DIR$/AwesomeQRCode.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/library/library.iml" filepath="$PROJECT_DIR$/.idea/modules/library/library.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/AwesomeQRCode.iml" filepath="$PROJECT_DIR$/.idea/AwesomeQRCode.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/library/AwesomeQRCode.library.iml" filepath="$PROJECT_DIR$/.idea/modules/library/AwesomeQRCode.library.iml" />
     </modules>
   </component>
 </project>
