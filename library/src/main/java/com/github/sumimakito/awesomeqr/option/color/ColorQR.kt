@@ -8,8 +8,8 @@ class ColorQR(var auto: Boolean = false,
             var topRigntColor: Int = 0xFF000000.toInt(),
             var bottomLeftColor: Int = 0xFF000000.toInt()
       ) {
-    fun duplicate(): Color {
-        return Color(auto, background, light, dark, topLeftColor,
+    fun duplicate(): ColorQR {
+        return ColorQR(auto, background, light, dark, topLeftColor,
           topRigntColor, bottomLeftColor)
     }
 }

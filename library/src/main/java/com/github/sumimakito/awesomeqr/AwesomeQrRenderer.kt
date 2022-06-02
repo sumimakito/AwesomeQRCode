@@ -3,6 +3,7 @@ package com.github.sumimakito.awesomeqr
 import android.graphics.*
 import android.util.Log
 import com.github.sumimakito.awesomeqr.option.RenderOption
+import com.github.sumimakito.awesomeqr.option.color.ColorQR
 import com.github.sumimakito.awesomeqr.option.background.BlendBackground
 import com.github.sumimakito.awesomeqr.option.background.GifBackground
 import com.github.sumimakito.awesomeqr.option.background.StillBackground
@@ -459,17 +460,17 @@ class AwesomeQrRenderer {
             val cornerRadiusPx = 12F
 
             val topLeftPaint = Paint()
-            topLeftPaint.color = renderOptions.color.topLeftColor
+            topLeftPaint.color = renderOptions.colorQR.topLeftColor
             topLeftPaint.isAntiAlias = true
             topLeftPaint.style = Paint.Style.FILL
 
             val topRightPaint = Paint()
-            topRightPaint.color = renderOptions.color.topRigntColor
+            topRightPaint.color = renderOptions.colorQR.topRigntColor
             topRightPaint.isAntiAlias = true
             topRightPaint.style = Paint.Style.FILL
 
             val bottomLeft = Paint()
-            bottomLeft.color = renderOptions.color.bottomLeftColor
+            bottomLeft.color = renderOptions.colorQR.bottomLeftColor
             bottomLeft.isAntiAlias = true
             bottomLeft.style = Paint.Style.FILL
 
