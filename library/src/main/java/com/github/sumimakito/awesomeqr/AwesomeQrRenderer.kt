@@ -449,7 +449,7 @@ class AwesomeQrRenderer {
         private fun roundedRectangularPositionFinder(unscaledCanvas: Canvas, byteMatrix: ByteMatrix,
                                                      renderOptions: RenderOption, nSize: Int,
                                                      maximus: Int, paintDark: Paint, paintBackground: Paint) {
-            Log.e(TAG, "maximus = ${maximus}")
+            Log.d(TAG, "maximus = ${maximus}")
             val heightPx = byteMatrix.height * nSize
             val widthPx = byteMatrix.width * nSize
 
