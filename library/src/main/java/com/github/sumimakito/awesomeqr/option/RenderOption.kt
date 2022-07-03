@@ -1,7 +1,7 @@
 package com.github.sumimakito.awesomeqr.option
 
 import com.github.sumimakito.awesomeqr.option.background.Background
-import com.github.sumimakito.awesomeqr.option.color.Color
+import com.github.sumimakito.awesomeqr.option.color.ColorQR
 import com.github.sumimakito.awesomeqr.option.logo.Logo
 import com.google.zxing.qrcode.decoder.ErrorCorrectionLevel
 
@@ -12,8 +12,10 @@ class RenderOption {
     var clearBorder = true
     var patternScale = 0.4f
     var roundedPatterns = false
-    var color: Color = Color()
+    var colorQR: ColorQR = ColorQR()
     var ecl = ErrorCorrectionLevel.M
+    var qrCodeVersion: Int = 6
+    var isCustomPositions: Boolean = true
 
     var background: Background? = null
         set(value) {
@@ -50,11 +52,13 @@ class RenderOption {
         renderConfig.clearBorder = clearBorder
         renderConfig.patternScale = patternScale
         renderConfig.roundedPatterns = roundedPatterns
-        renderConfig.color = color.duplicate()
+        renderConfig.colorQR = colorQR.duplicate()
         renderConfig.ecl = ecl
 
         renderConfig.background = background?.duplicate()
         renderConfig.logo = logo?.duplicate()
+
+        renderConfig.qrCodeVersion = qrCodeVersion
         return renderConfig
     }
 }
