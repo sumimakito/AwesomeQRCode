@@ -33,7 +33,7 @@ dependencies {
     })
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     implementation 'com.google.zxing:core:3.2.1'
-    implementation 'com.waynejo:androidndkgif:0.3.3'
+    implementation 'io.github.waynejo:androidndkgif:1.0.1'
     testImplementation 'junit:junit:4.12'
 }
 repositories {
