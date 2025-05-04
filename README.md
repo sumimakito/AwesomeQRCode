@@ -42,7 +42,7 @@ Then, edit your *build.gradle* on module level.
 
 ```
 dependencies {
-    implementation 'com.github.SumiMakito:AwesomeQRCode:<LATEST_VERSION_NAME>'
+    implementation 'com.github.sumimakito:AwesomeQRCode:<LATEST_VERSION_NAME>'
 }
 ```
 
